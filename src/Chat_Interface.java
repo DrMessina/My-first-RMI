@@ -23,6 +23,7 @@ public class Chat_Interface {
 	 * @wbp.parser.entryPoint
 	 */
 	public Chat_Interface() {
+<<<<<<< HEAD
 		JFrame frame = new JFrame();
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 		
@@ -57,5 +58,9 @@ public class Chat_Interface {
 		textField.setColumns(10);
 		
 		
+=======
+		//test
+		//lol ça marche
+>>>>>>> f9e806a27ba9afada867f1247c1fa3ee2be6949b
 	}
 }
