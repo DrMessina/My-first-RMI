@@ -11,56 +11,76 @@ import java.awt.Component;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
-import java.awt.GridLayout; 
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane; 
 
 
 public class Chat_Interface {
 	
 	private JTextField text;
-	private JTextField textField;
 
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	public Chat_Interface() {
-<<<<<<< HEAD
+		
 		JFrame frame = new JFrame();
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane);
-		
 		JSplitPane splitPane = new JSplitPane();
-		tabbedPane.addTab("New tab", null, splitPane, null);
+		frame.getContentPane().add(splitPane);
 		
-		JLayeredPane layeredPane = new JLayeredPane();
-		splitPane.setLeftComponent(layeredPane);
-		layeredPane.setLayout(new BoxLayout(layeredPane, BoxLayout.Y_AXIS));
+		JPanel panel = new JPanel();
+		panel.setAlignmentX(0.0f);
+		splitPane.setLeftComponent(panel);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{0, 30, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
 		
-		JLabel lblUsers = new JLabel("Users");
-		lblUsers.setAlignmentY(Component.TOP_ALIGNMENT);
-		layeredPane.add(lblUsers);
+		JLabel label = new JLabel("Users");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setAlignmentY(0.0f);
+		label.setAlignmentX(0.5f);
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.fill = GridBagConstraints.HORIZONTAL;
+		gbc_label.gridwidth = 2;
+		gbc_label.insets = new Insets(0, 0, 5, 0);
+		gbc_label.gridx = 0;
+		gbc_label.gridy = 0;
+		panel.add(label, gbc_label);
 		
 		JList list = new JList();
-		layeredPane.add(list);
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.insets = new Insets(0, 5, 0, 5);
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridwidth = 2;
+		gbc_list.gridx = 0;
+		gbc_list.gridy = 1;
+		panel.add(list, gbc_list);
 		
-		JLayeredPane layeredPane_1 = new JLayeredPane();
-		splitPane.setRightComponent(layeredPane_1);
-		layeredPane_1.setLayout(new GridLayout(0, 1, 0, 0));
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane.setRightComponent(splitPane_1);
 		
-		JTextPane textPane = new JTextPane();
-		layeredPane_1.add(textPane);
+		JList list_1 = new JList();
+		splitPane_1.setLeftComponent(list_1);
 		
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.LEFT);
-		layeredPane_1.setLayer(textField, 0);
-		layeredPane_1.add(textField);
-		textField.setColumns(10);
+		JPanel panel_1 = new JPanel();
+		splitPane_1.setRightComponent(panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[]{0};
+		gbl_panel_1.rowHeights = new int[]{0};
+		gbl_panel_1.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{Double.MIN_VALUE};
+		panel_1.setLayout(gbl_panel_1);
+		splitPane.setDividerLocation(100);
 		
-		
-=======
-		//test
-		//lol ça marche
->>>>>>> f9e806a27ba9afada867f1247c1fa3ee2be6949b
 	}
 }
