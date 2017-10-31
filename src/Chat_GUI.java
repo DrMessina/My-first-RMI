@@ -21,6 +21,7 @@ import javax.swing.JToggleButton;
 public class Chat_Interface {
 	
 	private JTextField text;
+	private JTextField textField;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -30,7 +31,7 @@ public class Chat_Interface {
 		JFrame frame = new JFrame();
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {0, 0};
+		gridBagLayout.columnWidths = new int[] {70, 200};
 		gridBagLayout.rowHeights = new int[] {0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0};
 		gridBagLayout.rowWeights = new double[]{1.0};
@@ -107,19 +108,20 @@ public class Chat_Interface {
 		JList list_1 = new JList();
 		GridBagConstraints gbc_list_1 = new GridBagConstraints();
 		gbc_list_1.gridwidth = 2;
-		gbc_list_1.insets = new Insets(0, 0, 5, 5);
+		gbc_list_1.insets = new Insets(0, 0, 5, 0);
 		gbc_list_1.fill = GridBagConstraints.BOTH;
 		gbc_list_1.gridx = 0;
 		gbc_list_1.gridy = 0;
 		panel.add(list_1, gbc_list_1);
 		
-		JTextArea textArea = new JTextArea();
-		GridBagConstraints gbc_textArea = new GridBagConstraints();
-		gbc_textArea.insets = new Insets(0, 0, 0, 5);
-		gbc_textArea.fill = GridBagConstraints.BOTH;
-		gbc_textArea.gridx = 0;
-		gbc_textArea.gridy = 1;
-		panel.add(textArea, gbc_textArea);
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 0, 5);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 0;
+		gbc_textField.gridy = 1;
+		panel.add(textField, gbc_textField);
+		textField.setColumns(10);
 		
 		JButton btnSend = new JButton("Send");
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
