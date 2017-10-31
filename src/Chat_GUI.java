@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 
 
-public class Chat_Interface {
+public class Chat_GUI {
 	
 	private JTextField text;
 	private JTextField textField;
@@ -26,7 +26,7 @@ public class Chat_Interface {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public Chat_Interface() {
+	public Chat_GUI() {
 		
 		JFrame frame = new JFrame();
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
