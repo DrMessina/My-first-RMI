@@ -20,8 +20,7 @@ import javax.swing.JToggleButton;
 
 public class Chat_GUI {
 	
-	private JTextField text;
-	private JTextField textField;
+	private JTextField messageInput;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -55,19 +54,19 @@ public class Chat_GUI {
 		gbl_users_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		users_panel.setLayout(gbl_users_panel);
 		
-		JList list = new JList();
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.insets = new Insets(0, 0, 0, 5);
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.gridx = 0;
-		gbc_list.gridy = 0;
-		users_panel.add(list, gbc_list);
+		JList listUsers = new JList();
+		GridBagConstraints gbc_listUsers = new GridBagConstraints();
+		gbc_listUsers.insets = new Insets(0, 0, 5, 0);
+		gbc_listUsers.fill = GridBagConstraints.BOTH;
+		gbc_listUsers.gridx = 0;
+		gbc_listUsers.gridy = 0;
+		users_panel.add(listUsers, gbc_listUsers);
 		
-		JButton btnAdd = new JButton("Add");
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.gridx = 0;
-		gbc_btnAdd.gridy = 1;
-		users_panel.add(btnAdd, gbc_btnAdd);
+		JButton btnAddUser = new JButton("Add");
+		GridBagConstraints gbc_btnAddUser = new GridBagConstraints();
+		gbc_btnAddUser.gridx = 0;
+		gbc_btnAddUser.gridy = 1;
+		users_panel.add(btnAddUser, gbc_btnAddUser);
 		
 		JPanel rooms_panel = new JPanel();
 		user_rooms_tabbed.addTab("Rooms", null, rooms_panel, null);
@@ -78,164 +77,58 @@ public class Chat_GUI {
 		gbl_rooms_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		rooms_panel.setLayout(gbl_rooms_panel);
 		
-		JList list_2 = new JList();
-		GridBagConstraints gbc_list_2 = new GridBagConstraints();
-		gbc_list_2.insets = new Insets(0, 0, 5, 0);
-		gbc_list_2.fill = GridBagConstraints.BOTH;
-		gbc_list_2.gridx = 0;
-		gbc_list_2.gridy = 0;
-		rooms_panel.add(list_2, gbc_list_2);
+		JList listRooms = new JList();
+		GridBagConstraints gbc_listRooms = new GridBagConstraints();
+		gbc_listRooms.insets = new Insets(0, 0, 5, 0);
+		gbc_listRooms.fill = GridBagConstraints.BOTH;
+		gbc_listRooms.gridx = 0;
+		gbc_listRooms.gridy = 0;
+		rooms_panel.add(listRooms, gbc_listRooms);
 		
-		JButton btnAdd_1 = new JButton("Add");
-		GridBagConstraints gbc_btnAdd_1 = new GridBagConstraints();
-		gbc_btnAdd_1.gridx = 0;
-		gbc_btnAdd_1.gridy = 1;
-		rooms_panel.add(btnAdd_1, gbc_btnAdd_1);
+		JButton btnAddRoom = new JButton("Add");
+		GridBagConstraints gbc_btnAddRoom = new GridBagConstraints();
+		gbc_btnAddRoom.gridx = 0;
+		gbc_btnAddRoom.gridy = 1;
+		rooms_panel.add(btnAddRoom, gbc_btnAddRoom);
 		
-		JPanel panel = new JPanel();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 1;
-		gbc_panel.gridy = 0;
-		frame.getContentPane().add(panel, gbc_panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
+		JPanel chat_panel = new JPanel();
+		GridBagConstraints gbc_chat_panel = new GridBagConstraints();
+		gbc_chat_panel.insets = new Insets(5, 0, 13, 5);
+		gbc_chat_panel.fill = GridBagConstraints.BOTH;
+		gbc_chat_panel.gridx = 1;
+		gbc_chat_panel.gridy = 0;
+		frame.getContentPane().add(chat_panel, gbc_chat_panel);
+		GridBagLayout gbl_chat_panel = new GridBagLayout();
+		gbl_chat_panel.columnWidths = new int[]{0, 0};
+		gbl_chat_panel.rowHeights = new int[]{0, 0, 0};
+		gbl_chat_panel.columnWeights = new double[]{1.0, 0.0};
+		gbl_chat_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		chat_panel.setLayout(gbl_chat_panel);
 		
-		JList list_1 = new JList();
-		GridBagConstraints gbc_list_1 = new GridBagConstraints();
-		gbc_list_1.gridwidth = 2;
-		gbc_list_1.insets = new Insets(0, 0, 5, 0);
-		gbc_list_1.fill = GridBagConstraints.BOTH;
-		gbc_list_1.gridx = 0;
-		gbc_list_1.gridy = 0;
-		panel.add(list_1, gbc_list_1);
+		JList messagesDisplay = new JList();
+		GridBagConstraints gbc_messagesDisplay = new GridBagConstraints();
+		gbc_messagesDisplay.gridwidth = 2;
+		gbc_messagesDisplay.insets = new Insets(0, 0, 5, 0);
+		gbc_messagesDisplay.fill = GridBagConstraints.BOTH;
+		gbc_messagesDisplay.gridx = 0;
+		gbc_messagesDisplay.gridy = 0;
+		chat_panel.add(messagesDisplay, gbc_messagesDisplay);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 0, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 0;
-		gbc_textField.gridy = 1;
-		panel.add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		JButton btnSend = new JButton("Send");
-		GridBagConstraints gbc_btnSend = new GridBagConstraints();
-		gbc_btnSend.gridx = 1;
-		gbc_btnSend.gridy = 1;
-		panel.add(btnSend, gbc_btnSend);
-		
-		
-		//BUGGED TRIAL
-		
-		/*JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
-		gbc_tabbedPane.anchor = GridBagConstraints.NORTHWEST;
-		gbc_tabbedPane.insets = new Insets(0, 0, 0, 5);
-		gbc_tabbedPane.gridx = 0;
-		gbc_tabbedPane.gridy = 0;
-		frame.getContentPane().add(tabbedPane, gbc_tabbedPane);
-		
-		
-		JPanel users_panel = new JPanel();
-		tabbedPane.addTab("Users", null, users_panel, null);
-		GridBagLayout users_gbl_panel = new GridBagLayout();
-		users_gbl_panel.columnWidths = new int[] {50};
-		users_gbl_panel.rowHeights = new int[] {200, 20};
-		users_gbl_panel.columnWeights = new double[]{0.0};
-		users_gbl_panel.rowWeights = new double[]{0.0, 0.0};
-		users_panel.setLayout(users_gbl_panel);
-		
-		JList list = new JList();
-		GridBagConstraints gbc_user_list = new GridBagConstraints();
-		gbc_user_list.fill = GridBagConstraints.BOTH;
-		gbc_user_list.insets = new Insets(0, 0, 5, 5);
-		gbc_user_list.gridx = 0;
-		gbc_user_list.gridy = 0;
-		users_panel.add(list, gbc_user_list);
-		
-		JButton btnAdd = new JButton("Add");
-		GridBagConstraints gbc_btnAdd_user = new GridBagConstraints();
-		gbc_btnAdd_user.insets = new Insets(0, 0, 0, 5);
-		gbc_btnAdd_user.fill = GridBagConstraints.BOTH;
-		gbc_btnAdd_user.gridx = 0;
-		gbc_btnAdd_user.gridy = 1;
-		users_panel.add(btnAdd, gbc_btnAdd_user);
-		
-		
-		
-		JPanel rooms_panel = new JPanel();
-		rooms_panel.setPreferredSize(new Dimension(10, 100));
-		tabbedPane.addTab("Rooms", null, rooms_panel, null);
-		tabbedPane.setEnabledAt(1, true);
-		GridBagLayout rooms_gbl_panel = new GridBagLayout();
-		rooms_gbl_panel.columnWidths = new int[] {50};
-		rooms_gbl_panel.rowHeights = new int[] {200, 20};
-		rooms_gbl_panel.columnWeights = new double[]{1.0};
-		rooms_gbl_panel.rowWeights = new double[]{1.0, 0.0};
-		rooms_panel.setLayout(rooms_gbl_panel);
-		
-		JList list_1 = new JList();
-		GridBagConstraints gbc_list_1 = new GridBagConstraints();
-		gbc_list_1.insets = new Insets(0, 0, 5, 0);
-		gbc_list_1.fill = GridBagConstraints.BOTH;
-		gbc_list_1.gridx = 0;
-		gbc_list_1.gridy = 0;
-		rooms_panel.add(list_1, gbc_list_1);
-		
-		JButton btnAdd_1 = new JButton("Add");
-		GridBagConstraints gbc_btnAdd_1 = new GridBagConstraints();
-		gbc_btnAdd_1.gridx = 0;
-		gbc_btnAdd_1.gridy = 1;
-		rooms_panel.add(btnAdd_1, gbc_btnAdd_1);
-		
-		
-		
-		
-		JPanel panel = new JPanel();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.anchor = GridBagConstraints.WEST;
-		gbc_panel.gridx = 1;
-		gbc_panel.gridy = 0;
-		frame.getContentPane().add(panel, gbc_panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
-		
-		JList chat_messages = new JList();
-		GridBagConstraints gbc_message_list = new GridBagConstraints();
-		gbc_message_list.gridwidth = 2;
-		gbc_message_list.insets = new Insets(0, 0, 5, 0);
-		gbc_message_list.fill = GridBagConstraints.BOTH;
-		gbc_message_list.gridx = 0;
-		gbc_message_list.gridy = 0;
-		panel.add(chat_messages, gbc_message_list);
-		
-		JTextArea txtrChatInput = new JTextArea();
-		txtrChatInput.setText("Chat input");
-		GridBagConstraints gbc_txtrChatInput = new GridBagConstraints();
-		gbc_txtrChatInput.insets = new Insets(0, 0, 0, 5);
-		gbc_txtrChatInput.fill = GridBagConstraints.BOTH;
-		gbc_txtrChatInput.gridx = 0;
-		gbc_txtrChatInput.gridy = 1;
-		panel.add(txtrChatInput, gbc_txtrChatInput);
+		messageInput = new JTextField();
+		GridBagConstraints gbc_messageInput = new GridBagConstraints();
+		gbc_messageInput.insets = new Insets(0, 5, 0, 5);
+		gbc_messageInput.fill = GridBagConstraints.HORIZONTAL;
+		gbc_messageInput.gridx = 0;
+		gbc_messageInput.gridy = 1;
+		chat_panel.add(messageInput, gbc_messageInput);
+		messageInput.setColumns(10);
 		
 		JButton btnSend = new JButton("Send");
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 1;
-		panel.add(btnSend, gbc_btnSend);*/
-		
-		
-		
-		
+		chat_panel.add(btnSend, gbc_btnSend);
 	}
+	
+	
 }
