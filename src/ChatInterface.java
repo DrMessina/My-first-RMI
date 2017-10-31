@@ -1,6 +1,7 @@
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ChatInterface {
+public interface ChatInterface extends Remote {
 	
 	public String getName()throws RemoteException;
 	public void send(String msg)throws RemoteException;

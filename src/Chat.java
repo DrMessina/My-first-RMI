@@ -1,5 +1,4 @@
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 public class Chat implements ChatInterface, Remote {
 	
@@ -10,7 +9,7 @@ public class Chat implements ChatInterface, Remote {
 	public Chat(String name) {
 		this.name=name;
 	}
-	public String getName() throws RemoteException {
+	public String getName() {
 		return this.name;
 	}
  
@@ -22,7 +21,7 @@ public class Chat implements ChatInterface, Remote {
 		return client;
 	}
  
-	public void send(String s) throws RemoteException{
+	public void send(String s){
 		System.out.println(s);
 	}	
 	
