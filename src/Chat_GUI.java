@@ -18,6 +18,9 @@ import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
+import javax.swing.WindowConstants;
+import javax.swing.JCheckBox;
+import javax.swing.SwingConstants;
 
 public class Chat_GUI implements GUIInterface, ActionListener {
 	
@@ -25,9 +28,6 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 	private JTextField separateInput;
 
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public void createChatInterface(String nickname) {
 		
 		JFrame frame = new JFrame();
@@ -71,6 +71,8 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 		gbc_btnAddUser.gridx = 0;
 		gbc_btnAddUser.gridy = 1;
 		users_panel.add(btnAddUser, gbc_btnAddUser);
+		btnAddUser.setActionCommand("new_user");
+		btnAddUser.addActionListener(this);
 		
 		JPanel rooms_panel = new JPanel();
 		user_rooms_tabbed.addTab("Rooms", null, rooms_panel, null);
@@ -94,6 +96,8 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 		gbc_btnAddRoom.gridx = 0;
 		gbc_btnAddRoom.gridy = 1;
 		rooms_panel.add(btnAddRoom, gbc_btnAddRoom);
+		btnAddRoom.setActionCommand("new_room");
+		btnAddRoom.addActionListener(this);
 		
 		JPanel chat_panel = new JPanel();
 		GridBagConstraints gbc_chat_panel = new GridBagConstraints();
@@ -132,14 +136,33 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 1;
 		chat_panel.add(btnSend, gbc_btnSend);
+		
+		frame.getRootPane().setDefaultButton(btnSend);
+		frame.setSize(600,400);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
 	}
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void createInputInterface(String inputInterfaceType) {
 		
 		//règles pour editer l'affichage selon les 3 cas login, ajouter un utilisateur et créer un salon.
 		String inputTitle = "Login";
 		String welcomeMessage = "Choose your nickname :";
 		String buttonText = "Log in";
+		
+		JFrame inputframe = new JFrame();
+		inputframe.setPreferredSize(new Dimension(80, 40));
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		inputframe.getContentPane().setLayout(gridBagLayout);
 		
 		if (inputInterfaceType == "login") {
 			inputTitle = "Login";
@@ -153,18 +176,18 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 			inputTitle = "Create a new room";
 			welcomeMessage = "Enter the name of the desired room :";
 			buttonText = "Create";
+			
+			JCheckBox chckbxPrivate = new JCheckBox("Private");
+			GridBagConstraints gbc_chckbxPrivate = new GridBagConstraints();
+			gbc_chckbxPrivate.fill = GridBagConstraints.VERTICAL;
+			gbc_chckbxPrivate.gridx = 0;
+			gbc_chckbxPrivate.gridy = 2;
+			inputframe.getContentPane().add(chckbxPrivate, gbc_chckbxPrivate);
 		}
 		
 		//éléments d'interface
-		JFrame inputframe = new JFrame();
-		inputframe.setPreferredSize(new Dimension(80, 40));
 		inputframe.setTitle(inputTitle);
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
-		inputframe.getContentPane().setLayout(gridBagLayout);
+		
 		
 		JLabel lblTitle = new JLabel(welcomeMessage);
 		GridBagConstraints gbc_lblTitle = new GridBagConstraints();
@@ -185,31 +208,43 @@ public class Chat_GUI implements GUIInterface, ActionListener {
 		
 		JButton btnSubmit = new JButton(buttonText);
 		GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
+		gbc_btnSubmit.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSubmit.gridx = 0;
-		gbc_btnSubmit.gridy = 2;
+		gbc_btnSubmit.gridy = 3;
 		inputframe.getContentPane().add(btnSubmit, gbc_btnSubmit);
+		
+		btnSubmit.setActionCommand(inputInterfaceType);
 		btnSubmit.addActionListener(this);
 		
+		inputframe.getRootPane().setDefaultButton(btnSubmit);
 		inputframe.setSize(300,200);
 		inputframe.setLocationRelativeTo(null);
 		inputframe.setVisible(true);
+		
+		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		JButton btn = (JButton)evt.getSource();
-		String name = btn.getName();
-		if (name.equals("Log In")) {
+		String command = btn.getActionCommand();
+		System.err.println(command);
+		if (command.equals("login")) {
 			String inputText = separateInput.getText();
 			
 			//envoyer le login au serveur
 			//recevoir l'erreur si login déjà existant
 			
 			createChatInterface(inputText);
-			
-	
+		} else if (command.equals("new_user")) {
+			createInputInterface("add_user");
+		} else if (command.equals("add_user")) {
+			// add user to room
+		} else if (command.equals("new_room")) {
+			createInputInterface("add_room");
+		} else if (command.equals("add_user")) {
+			// add user to room
 		}
-	
 	}
 	
 }
