@@ -3,6 +3,7 @@ import java.util.Hashtable;
 public class Room {
 	private Hashtable<String, User> users = new Hashtable<>();
 	private Hashtable<Integer, Msg> messages = new Hashtable<>();
+	private Hashtable<User, Integer> lastCheck = new Hashtable<>();
 	private int IDSalon;
 	@SuppressWarnings("unused")
 	private boolean isPrivate;
