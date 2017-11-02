@@ -5,7 +5,12 @@ public class ClientRMI {
 	
 public ClientRMI() {
 	chatGUI = new Chat_GUI();
-		chatGUI.createInputInterface("login");
+	
+	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+        	chatGUI.createInputInterface("login");
+        }
+    });
 }
 
 public static void main(String[] argv) {

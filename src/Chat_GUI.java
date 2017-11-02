@@ -30,6 +30,8 @@ import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -39,7 +41,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener {
+public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener, ListSelectionListener {
 	
 	private JFrame frame;
 	private JFrame inputframe;
@@ -53,6 +55,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private DefaultListModel<String> userMessages;
 	private Client client;
 	private Integer actualWidth;
+	private int selectedRoom;
 	
 	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
@@ -117,18 +120,19 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			      return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
 			   }
 			}
+		
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	public void createChatInterface(String nickname) {
 		
-		userRooms = new DefaultListModel<>();
-		userMessages = new DefaultListModel<>();
-		userRooms.addElement("Room1");
-		userRooms.addElement("Room2");
-		userRooms.addElement("Room3");
-		userRooms.addElement("Room4");
+        userRooms = new DefaultListModel<>();
+        userMessages = new DefaultListModel<>();
+        userRooms.addElement("Room1");
+        userRooms.addElement("Room2");
+        userRooms.addElement("Room3");
+        userRooms.addElement("Room4");
 		
 		frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
@@ -172,6 +176,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
 		rooms_panel.add(scrollRooms, gbc_scrollPane);
+		listRooms.addListSelectionListener(this);
+
 		
 		JButton btnAddRoom = new JButton("Add");
 		btnAddRoom.setPreferredSize(new Dimension(50, 29));
@@ -393,7 +399,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				
 				//si login existe, lancer le chat, sinon afficher le message d'erreur
 				if (login_exists == false) {
-					createChatInterface(inputText);
+				        	createChatInterface(inputText);
+				        	inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 				} else {
 					lblErrorMessage.setText("Nickname already taken!");
 				}
@@ -440,35 +447,47 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					 * METHODE SERVEUR
 					 * ajout de la room + utilisateur au server
 					*/
+					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		    			public void run() {
 					userRooms.addElement(inputText);
 					listRooms.setModel(userRooms);
+					userMessages = new DefaultListModel<>();
+					userMessages.addElement("--- Room " + inputText + " created ---");
+					listMessages.setModel(userMessages);
 					inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 					frame.repaint();
+		    			}
+		    		});
 				} else {
 					lblErrorMessage.setText("Room exists already!");
 				}
 			}	
 		} else if (command.equals("send")) {
-			String inputText = messageInput.getText();
-			if (!inputText.equals("")) {
-			messageInput.setText("");
-			Date date = new Date(evt.getWhen());
-			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
-			String timeStamp = ft.format(date);
-			String message = "[" + timeStamp + "] " + client.getName() + " : " + inputText ;
+		        		String inputText = messageInput.getText();
+		        		if (!inputText.equals("")) {
+		        			messageInput.setText("");
+		        			Date date = new Date(evt.getWhen());
+		        			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
+		        			String timeStamp = ft.format(date);
+		        			String message = "[" + timeStamp + "] " + client.getName() + " : " + inputText ;
 			
 			/*
 			 * METHODE SERVEUR
 			 * envoi au serveur du message à envoyer aux autres utilisareurs
 			*/
-			userMessages.addElement(message);
-			listMessages.setModel(userMessages);
-			int lastIndex = userMessages.getSize() - 1;
-			listMessages.ensureIndexIsVisible(lastIndex);
-			inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-		
-			}
+		        			userMessages.addElement(message);
+		        			listMessages.setModel(userMessages);
+		        			int lastIndex = userMessages.getSize() - 1;
+		        			listMessages.ensureIndexIsVisible(lastIndex);
+		        		}
 		}
+	}
+	
+	public void valueChanged(ListSelectionEvent evt) {
+		selectedRoom = listRooms.getSelectedIndex();
+		listMessages.setModel(userMessages);
+		int lastIndex = userMessages.getSize() - 1;
+		listMessages.ensureIndexIsVisible(lastIndex);
 	}
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {
