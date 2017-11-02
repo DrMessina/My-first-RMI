@@ -36,9 +36,12 @@ import javax.swing.text.PlainDocument;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener {
 	
+	private JFrame frame;
 	private JFrame inputframe;
 	private JTextField messageInput;
 	private JTextField separateInput;
@@ -127,7 +130,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		userRooms.addElement("Room3");
 		userRooms.addElement("Room4");
 		
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -157,28 +160,25 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		user_rooms_tabbed.addTab("Rooms", null, rooms_panel, null);
 		GridBagLayout gbl_rooms_panel = new GridBagLayout();
 		gbl_rooms_panel.columnWidths = new int[]{0, 0};
-		gbl_rooms_panel.rowHeights = new int[]{0, 0, 0};
+		gbl_rooms_panel.rowHeights = new int[] {0, 0};
 		gbl_rooms_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_rooms_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_rooms_panel.rowWeights = new double[]{1.0, 0.0};
 		rooms_panel.setLayout(gbl_rooms_panel);
 		
 		listRooms = new JList<String>(userRooms);
-		listRooms.setMaximumSize(new Dimension(50, 0));
-		listRooms.setMinimumSize(new Dimension(50, 0));
-		listRooms.setPreferredSize(new Dimension(50, 0));
-		listRooms.setValueIsAdjusting(true);
-		GridBagConstraints gbc_listRooms = new GridBagConstraints();
-		gbc_listRooms.insets = new Insets(0, 0, 5, 0);
-		gbc_listRooms.fill = GridBagConstraints.BOTH;
-		gbc_listRooms.gridx = 0;
-		gbc_listRooms.gridy = 0;
-		rooms_panel.add(listRooms, gbc_listRooms);
+		JScrollPane scrollRooms = new JScrollPane(listRooms);
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		rooms_panel.add(scrollRooms, gbc_scrollPane);
 		
 		JButton btnAddRoom = new JButton("Add");
 		btnAddRoom.setPreferredSize(new Dimension(50, 29));
 		btnAddRoom.setMinimumSize(new Dimension(50, 29));
 		btnAddRoom.setMaximumSize(new Dimension(50, 29));
 		GridBagConstraints gbc_btnAddRoom = new GridBagConstraints();
+		gbc_btnAddRoom.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAddRoom.gridx = 0;
 		gbc_btnAddRoom.gridy = 1;
 		rooms_panel.add(btnAddRoom, gbc_btnAddRoom);
@@ -197,15 +197,16 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		users_panel.setLayout(gbl_users_panel);
 		
 		JList listUsers = new JList();
-		listUsers.setMaximumSize(new Dimension(50, 0));
+		JScrollPane scrollUsers = new JScrollPane(listUsers);
+		/*listUsers.setMaximumSize(new Dimension(50, 0));
 		listUsers.setMinimumSize(new Dimension(50, 0));
-		listUsers.setPreferredSize(new Dimension(50, 0));
-		GridBagConstraints gbc_listUsers = new GridBagConstraints();
-		gbc_listUsers.insets = new Insets(0, 0, 5, 0);
-		gbc_listUsers.fill = GridBagConstraints.BOTH;
-		gbc_listUsers.gridx = 0;
-		gbc_listUsers.gridy = 0;
-		users_panel.add(listUsers, gbc_listUsers);
+		listUsers.setPreferredSize(new Dimension(50, 0));*/
+		GridBagConstraints gbc_scrollUsers = new GridBagConstraints();
+		gbc_scrollUsers.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollUsers.fill = GridBagConstraints.BOTH;
+		gbc_scrollUsers.gridx = 0;
+		gbc_scrollUsers.gridy = 0;
+		users_panel.add(scrollUsers, gbc_scrollUsers);
 		
 		JButton btnAddUser = new JButton("Add");
 		btnAddUser.setMaximumSize(new Dimension(50, 29));
@@ -239,13 +240,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		chat_panel.addComponentListener(this);
 		
 		listMessages = new JList<String>(userMessages);
-		GridBagConstraints gbc_messagesDisplay = new GridBagConstraints();
-		gbc_messagesDisplay.gridwidth = 2;
-		gbc_messagesDisplay.insets = new Insets(0, 0, 5, 0);
-		gbc_messagesDisplay.fill = GridBagConstraints.BOTH;
-		gbc_messagesDisplay.gridx = 0;
-		gbc_messagesDisplay.gridy = 0;
-		chat_panel.add(listMessages, gbc_messagesDisplay);
+		JScrollPane scrollMessages = new JScrollPane(listMessages);
+		GridBagConstraints gbc_scrollMessages = new GridBagConstraints();
+		gbc_scrollMessages.gridwidth = 2;
+		gbc_scrollMessages.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollMessages.fill = GridBagConstraints.BOTH;
+		gbc_scrollMessages.gridx = 0;
+		gbc_scrollMessages.gridy = 0;
+		chat_panel.add(scrollMessages, gbc_scrollMessages);
 		
 		messageInput = new JTextField();
 		GridBagConstraints gbc_messageInput = new GridBagConstraints();
@@ -441,13 +443,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					userRooms.addElement(inputText);
 					listRooms.setModel(userRooms);
 					inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+					frame.repaint();
 				} else {
 					lblErrorMessage.setText("Room exists already!");
 				}
 			}	
 		} else if (command.equals("send")) {
-			
 			String inputText = messageInput.getText();
+			if (!inputText.equals("")) {
 			messageInput.setText("");
 			Date date = new Date(evt.getWhen());
 			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
@@ -460,7 +463,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			*/
 			userMessages.addElement(message);
 			listMessages.setModel(userMessages);
+			int lastIndex = userMessages.getSize() - 1;
+			listMessages.ensureIndexIsVisible(lastIndex);
 			inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+		
+			}
 		}
 	}
 	
