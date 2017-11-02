@@ -1,13 +1,14 @@
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class Room {
 	
 	private int idRoom;
 	private boolean isPrivate;
-	private HashMap<Integer, Client> tabUsers;
-	private HashMap<Integer, Msg> tabMsg;
+	private Hashtable<Integer, Client> tabUsers;
+	private Hashtable<Integer, Msg> tabMsg;
 	
-	public Room(int idRoom, boolean isPrivate, HashMap<Integer, Client> tabUsers, HashMap<Integer, Msg> tabMsg) {
+	public Room(int idRoom, boolean isPrivate, Hashtable<Integer, Client> tabUsers, Hashtable<Integer, Msg> tabMsg) {
 		super();
 		this.tabUsers = tabUsers;
 		this.tabMsg = tabMsg;
@@ -15,19 +16,19 @@ public class Room {
 		this.isPrivate = isPrivate;
 	}
 
-	public HashMap<Integer, Client> getTabUsers() {
+	public Hashtable<Integer, Client> getTabUsers() {
 		return tabUsers;
 	}
 
-	public void setTabUsers(HashMap<Integer, Client> tabUsers) {
+	public void setTabUsers(Hashtable<Integer, Client> tabUsers) {
 		this.tabUsers = tabUsers;
 	}
 
-	public HashMap<Integer, Msg> getTabMsg() {
+	public Hashtable<Integer, Msg> getTabMsg() {
 		return tabMsg;
 	}
 
-	public void setTabMsg(HashMap<Integer, Msg> tabMsg) {
+	public void setTabMsg(Hashtable<Integer, Msg> tabMsg) {
 		this.tabMsg = tabMsg;
 	}
 

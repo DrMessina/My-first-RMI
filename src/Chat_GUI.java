@@ -52,10 +52,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private JList<String> listRooms;
 	private DefaultListModel<String> userRooms;
 	private JList<String> listMessages;
-	private DefaultListModel<String> userMessages;
+	private DefaultListModel<String> roomMessages;
+	private JList<String> listUsers;
+	private DefaultListModel<String> roomUsers;
 	private Client client;
 	private Integer actualWidth;
-	private int selectedRoom;
+	private Room selectedRoom;
 	
 	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
@@ -128,7 +130,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	public void createChatInterface(String nickname) {
 		
         userRooms = new DefaultListModel<>();
-        userMessages = new DefaultListModel<>();
+        roomMessages = new DefaultListModel<>();
+        roomUsers = new DefaultListModel<>();
         userRooms.addElement("Room1");
         userRooms.addElement("Room2");
         userRooms.addElement("Room3");
@@ -202,11 +205,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbl_users_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		users_panel.setLayout(gbl_users_panel);
 		
-		JList listUsers = new JList();
+		listUsers = new JList<String>();
 		JScrollPane scrollUsers = new JScrollPane(listUsers);
-		/*listUsers.setMaximumSize(new Dimension(50, 0));
-		listUsers.setMinimumSize(new Dimension(50, 0));
-		listUsers.setPreferredSize(new Dimension(50, 0));*/
 		GridBagConstraints gbc_scrollUsers = new GridBagConstraints();
 		gbc_scrollUsers.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollUsers.fill = GridBagConstraints.BOTH;
@@ -245,7 +245,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		chat_panel.setLayout(gbl_chat_panel);
 		chat_panel.addComponentListener(this);
 		
-		listMessages = new JList<String>(userMessages);
+		listMessages = new JList<String>(roomMessages);
 		JScrollPane scrollMessages = new JScrollPane(listMessages);
 		GridBagConstraints gbc_scrollMessages = new GridBagConstraints();
 		gbc_scrollMessages.gridwidth = 2;
@@ -435,31 +435,26 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			} else {
 				//envoyer le nom du salon + utlisateur au serveur
 				//recevoir l'erreur si le salon est déjà existant
-				/*
-				 * METHODE SERVEUR
-				 * appel serveur si existante dans la liste
-				*/
-				boolean room_exists = false;
 				
-				//si le salon existe, ajouter le salon, sinon afficher le message d'erreur
-				if (room_exists == false) {
+				if (userRooms.contains(inputText)) {
+					lblErrorMessage.setText("Room exists already!");
+				} else {
 					/*
 					 * METHODE SERVEUR
 					 * ajout de la room + utilisateur au server
 					*/
 					javax.swing.SwingUtilities.invokeLater(new Runnable() {
 		    			public void run() {
-					userRooms.addElement(inputText);
-					listRooms.setModel(userRooms);
-					userMessages = new DefaultListModel<>();
-					userMessages.addElement("--- Room " + inputText + " created ---");
-					listMessages.setModel(userMessages);
-					inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-					frame.repaint();
+		    				userRooms.addElement(inputText);
+		    				listRooms.setModel(userRooms);
+		    				
+		    				int lastIndex = userRooms.getSize() - 1;
+		    				chatChange(lastIndex);
+		    				listRooms.setSelectedIndex(lastIndex);
+		    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+		    				
 		    			}
 		    		});
-				} else {
-					lblErrorMessage.setText("Room exists already!");
 				}
 			}	
 		} else if (command.equals("send")) {
@@ -475,20 +470,49 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			 * METHODE SERVEUR
 			 * envoi au serveur du message à envoyer aux autres utilisareurs
 			*/
-		        			userMessages.addElement(message);
-		        			listMessages.setModel(userMessages);
-		        			int lastIndex = userMessages.getSize() - 1;
+		        			roomMessages.addElement(message);
+		        			listMessages.setModel(roomMessages);
+		        			int lastIndex = roomMessages.getSize() - 1;
 		        			listMessages.ensureIndexIsVisible(lastIndex);
 		        		}
 		}
 	}
 	
 	public void valueChanged(ListSelectionEvent evt) {
-		selectedRoom = listRooms.getSelectedIndex();
-		listMessages.setModel(userMessages);
-		int lastIndex = userMessages.getSize() - 1;
-		listMessages.ensureIndexIsVisible(lastIndex);
+		int roomID = listRooms.getSelectedIndex();
+		chatChange(roomID);
+		
 	}
+	
+	public void chatChange (int roomID) {
+		// Appel serveur pour avoir la bonne conversation avec l'id de la room
+		
+		roomMessages.clear();
+		// ajout conversation en cours
+		System.out.println("Switching room" + roomID);
+		roomMessages.addElement("Room " + roomID);
+		roomMessages.addElement("message 1");
+		roomMessages.addElement("message 2");
+		roomMessages.addElement("message 3");
+		
+		listMessages.setModel(roomMessages);
+		int lastIndex = roomMessages.getSize() - 1;
+		listMessages.ensureIndexIsVisible(lastIndex);
+		
+		try {
+			roomUsers.clear();
+		} 
+		catch (Exception e) {
+			
+		}
+		roomUsers.addElement(client.getName());
+		roomUsers.addElement("Other Users");
+		roomUsers.addElement("From Room " + roomID);
+		listUsers.setModel(roomUsers);
+	}
+	
+	
+	
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {
 		
