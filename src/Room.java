@@ -3,28 +3,50 @@ import java.util.Hashtable;
 public class Room {
 	private Hashtable<String, User> users = new Hashtable<>();
 	private Hashtable<Integer, Msg> messages = new Hashtable<>();
-	private Hashtable<User, Integer> lastCheck = new Hashtable<>();
+	private Hashtable<String, Integer> lastCheck = new Hashtable<>();
 	private int IDSalon;
-	@SuppressWarnings("unused")
 	private boolean isPrivate;
 	
 	//constructor for room creation
 	public Room(User u,int id) {
 		this.users.put(u.getNom(), u);
 		this.IDSalon=id;
+		lastCheck.put(u.getNom(), 0);
 	}
+	//second constructeur
 	public Room(User u, Msg m, int id) {
 		this.users.put(u.getNom(), u);
 		this.messages.put(m.getPosition(), m);
 		this.IDSalon=id;
+		lastCheck.put(u.getNom(), 0);
 	}
-	
-	public void setIDSalon(int id) { this.IDSalon=id;}
-	public int gtIDsalon() {return this.IDSalon;}
-	
+	//on obtiens la derniere interaction
+	public int getLastCheck(String nom) {
+		return lastCheck.get(nom);
+	}
+	//definir la derniere interaction
+	public void setLastCheck(String nom,int positionMsg) {
+		this.lastCheck.put(nom, positionMsg);
+	}
+	//retourne  si oui ou non la room est privée
+	public boolean getIsPrivate() {
+		return isPrivate;
+	}
+	//defini si une room est privé
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+	//redefini l'id du salon
+	public void setIDSalon(int id) {
+		this.IDSalon=id;}
+	//renvoie l'id du salon
+	public int gtIDsalon() {
+		return this.IDSalon;}
+	//ajoute un msg dans la room
 	public void addMsg(Msg m) { 
 		this.messages.put(m.getPosition(), m);
 	}
+	//ajoute un user dans la room
 	public void addUser(User u) {
 		this.users.put(u.getNom(), u);
 	}

@@ -23,7 +23,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	}
 
 	@Override
-	public void getIntoRoom(int roomId,User u) throws RemoteException {
+	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
+		quitRoom(oldRoomId, u.toString(), positionMsg);
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 			
@@ -33,15 +34,15 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	
 	@Override
 	public void sendMsg(Msg m, int roomId) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		rooms.get(roomId).addMsg(m);
 	}
 	
 
 	@Override
-	public void inviteUser(User userAllow) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public void inviteUser(User userAllow,int roomId) throws RemoteException {
+		if(this.allUsers.contains(userAllow)) {
+			rooms.get(roomId).addUser(userAllow);
+		}
 	}
 	
 
@@ -58,8 +59,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	}
 
 	@Override
-	public void quitRoom(int idRoom) throws RemoteException {
-		
+	public void quitRoom(int roomId, String nom, int positionMsg) throws RemoteException {
+		rooms.get(roomId).setLastCheck(nom, positionMsg);
 	}
 
 }
