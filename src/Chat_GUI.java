@@ -1,8 +1,6 @@
 import javax.swing.JFrame; 
 import javax.swing.JTextField;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import java.awt.GridLayout;
 import javax.swing.JList;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -12,34 +10,25 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Array;
+import java.rmi.Remote;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.awt.Component;
-import javax.swing.JTextArea;
 import java.awt.ComponentOrientation;
-import java.awt.FlowLayout;
 import javax.swing.JLabel;
-import javax.swing.JToggleButton;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener, ListSelectionListener {
 	
@@ -56,6 +45,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private JList<String> listUsers;
 	private DefaultListModel<String> roomUsers;
 	private Integer actualWidth;
+	private ClientRMI clientRMI;
 	private String userName;
 	
 	
@@ -443,18 +433,18 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					 * METHODE SERVEUR
 					 * ajout de la room + utilisateur au server
 					*/
-					javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		    			public void run() {
+					
 		    				userRooms.addElement(inputText);
 		    				listRooms.setModel(userRooms);
 		    				
 		    				int lastIndex = userRooms.getSize() - 1;
+		    				
+		    				clientRMI.addRoom(userName,lastIndex);
 		    				chatChange(lastIndex);
 		    				listRooms.setSelectedIndex(lastIndex);
 		    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 		    				
-		    			}
-		    		});
+	
 				}
 			}	
 		} else if (command.equals("send")) {
