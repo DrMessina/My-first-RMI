@@ -8,7 +8,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	
 	Hashtable<Integer, Room> rooms = new Hashtable<>();
 	Hashtable<String, User> allUsers = new Hashtable<>();
-	Hashtable<K, V>
+	
 	public ChatSRV() throws RemoteException{}
 
 	@Override
@@ -54,6 +54,11 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	@Override
 	public void removeUser(User u) throws RemoteException {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void quitRoom(int idRoom) throws RemoteException {
 		
 	}
 

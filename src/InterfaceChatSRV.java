@@ -10,5 +10,5 @@ public interface InterfaceChatSRV extends Remote{
 	public void inviteUser(User userAllow) throws RemoteException;
 	public Msg getMsg() throws RemoteException;
 	public void removeUser(User u) throws RemoteException;
-
+	public void quitRoom(int idRoom)throws RemoteException;
 }
