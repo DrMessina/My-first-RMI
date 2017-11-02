@@ -1,42 +1,21 @@
-import java.util.Date;
+
 
 public class Msg {
-	
-	private String userName;
-	private Date time;
+	private User user;
 	private String msg;
+	private int position;
 	
-	public Msg(String userName, Date time, String msg) {
-		super();
-		this.msg = msg;
-		this.userName = userName;
-		this.time = time;
+	public Msg(User u, String m,int p) {
+		this.user = u;
+		this.msg=m;
+		this.position=p;
 	}
-
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserID(String userName) {
-		this.userName = userName;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
+	public User getUser() {	return this.user;}
+	public void setUser(User u) {	this.user=u;}
 	
-
+	public String getMessage() {	return this.msg;}
+	public void setMessage(String m) {	this.msg=m;}
+	
+	public void setPosition(int p) {	this.position=p;}
+	public int getPosition() {	return position;}
 }

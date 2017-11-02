@@ -1,25 +1,17 @@
+import java.net.InetAddress;
 import java.rmi.*;
-import java.util.*;
+import java.rmi.registry.LocateRegistry;
 
 public class ServerRMI {
 	
 	public static void main(String[] argv) {
-		try {
-			//System.setSecurityManager(new RMISecurityManager());
-			Scanner s = new Scanner(System.in);
-			System.out.println("enter your name");
-			String name = s.nextLine().trim();
-			Chat server = new Chat(name);
-			Naming.bind("rmi://localhost/abc",  server);
-			System.out.println("system : Chat Remote Object is ready:");
-			while(true) {
-				String msg=s.nextLine().trim();
-				if(server.getClient()!=null) {
-					ChatInterface client = server.getClient();
-					msg = "["+server.getName()+"]"+msg;
-					client.send(msg);
-				}
-			}
+		try {			
+			//lancement du registre de nom RMI(ne se fait qu'une seule fois
+			LocateRegistry.createRegistry(1099);
+			//instanciation de la classe distante
+			ChatSRV chatSRV = new ChatSRV();
+			//enregistrement dans le registre de noms RMI
+			Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI", chatSRV);
 			
 		} catch (Exception e) {
 			// TODO: handle exception

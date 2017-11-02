@@ -1,53 +1,31 @@
-import java.util.HashMap;
 import java.util.Hashtable;
 
 public class Room {
-	
-	private int idRoom;
+	private Hashtable<String, User> users = new Hashtable<>();
+	private Hashtable<Integer, Msg> messages = new Hashtable<>();
+	private int IDSalon;
+	@SuppressWarnings("unused")
 	private boolean isPrivate;
-	private Hashtable<String, Client> tabUsers;
-	private Hashtable<Integer, Msg> tabMsg;
 	
-	public Room(int idRoom, boolean isPrivate, Hashtable<String, Client> tabUsers, Hashtable<Integer, Msg> tabMsg) {
-		super();
-		this.tabUsers = tabUsers;
-		this.tabMsg = tabMsg;
-		this.idRoom = idRoom;
-		this.isPrivate = isPrivate;
+	//constructor for room creation
+	public Room(User u,int id) {
+		this.users.put(u.getNom(), u);
+		this.IDSalon=id;
 	}
-
-	public Hashtable<String, Client> getTabUsers() {
-		return tabUsers;
+	public Room(User u, Msg m, int id) {
+		this.users.put(u.getNom(), u);
+		this.messages.put(m.getPosition(), m);
+		this.IDSalon=id;
 	}
-
-	public void setTabUsers(Hashtable<String, Client> tabUsers) {
-		this.tabUsers = tabUsers;
-	}
-
-	public Hashtable<Integer, Msg> getTabMsg() {
-		return tabMsg;
-	}
-
-	public void setTabMsg(Hashtable<Integer, Msg> tabMsg) {
-		this.tabMsg = tabMsg;
-	}
-
-	public int getIdRoom() {
-		return idRoom;
-	}
-
-	public void setIdRoom(int idRoom) {
-		this.idRoom = idRoom;
-	}
-
-	public boolean isPrivate() {
-		return isPrivate;
-	}
-
-	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
-	}
-
 	
-
+	public void setIDSalon(int id) { this.IDSalon=id;}
+	public int gtIDsalon() {return this.IDSalon;}
+	
+	public void addMsg(Msg m) { 
+		this.messages.put(m.getPosition(), m);
+	}
+	public void addUser(User u) {
+		this.users.put(u.getNom(), u);
+	}
+	
 }
