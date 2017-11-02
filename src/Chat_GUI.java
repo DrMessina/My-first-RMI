@@ -52,11 +52,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private Integer actualWidth;
 	
 	
-	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
 	public class MaxLengthTextDocument extends PlainDocument {
 	    //Store maximum characters permitted
 	    private int maxChars;
+	   
 	    
 	    public void setMaxChars(int maxChars) {
 	    	this.maxChars = maxChars;
@@ -74,7 +74,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void componentResized(ComponentEvent evt) {
-        actualWidth = evt.getComponent().getWidth();            
+        actualWidth = evt.getComponent().getWidth(); 
+        System.out.println(actualWidth);
+        listMessages.setCellRenderer(new MyCellRenderer(actualWidth-100));
     }
 
 	@Override
@@ -95,6 +97,24 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 	}
 	
+	//by Andrew on StackOverflow (https://stackoverflow.com/questions/7861724/is-there-a-word-wrap-property-for-jlabel/7861833#7861833)
+		@SuppressWarnings("serial")
+	class MyCellRenderer extends DefaultListCellRenderer {
+		   public static final String HTML_1 = "<html><body style='width: ";
+		   public static final String HTML_2 = "px'>";
+		   public static final String HTML_3 = "</html>";
+		   private int width;
+
+		   public MyCellRenderer(int width) {
+		      this.width = width;
+		   }
+		   @Override
+		   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {			      
+			   String text = HTML_1 + String.valueOf(width) + HTML_2 + value.toString() + HTML_3;
+			      return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+			   }
+			}
+	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -106,13 +126,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		userRooms.addElement("Room2");
 		userRooms.addElement("Room3");
 		userRooms.addElement("Room4");
-		actualWidth = 280;
 		
 		JFrame frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {50, 200};
+		gridBagLayout.columnWidths = new int[] {0, 0};
 		gridBagLayout.rowHeights = new int[] {0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0};
 		gridBagLayout.rowWeights = new double[]{1.0};
@@ -120,10 +139,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 		
 		JTabbedPane user_rooms_tabbed = new JTabbedPane(JTabbedPane.TOP);
+		user_rooms_tabbed.setMaximumSize(new Dimension(60, 0));
 		user_rooms_tabbed.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		user_rooms_tabbed.setPreferredSize(new Dimension(50, 0));
-		user_rooms_tabbed.setMaximumSize(new Dimension(50, 32767));
-		user_rooms_tabbed.setMinimumSize(new Dimension(50, 0));
+		user_rooms_tabbed.setPreferredSize(new Dimension(60, 0));
+		user_rooms_tabbed.setMinimumSize(new Dimension(60, 0));
 		GridBagConstraints gbc_user_rooms_tabbed = new GridBagConstraints();
 		gbc_user_rooms_tabbed.insets = new Insets(0, 0, 0, 5);
 		gbc_user_rooms_tabbed.fill = GridBagConstraints.BOTH;
@@ -132,6 +151,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.getContentPane().add(user_rooms_tabbed, gbc_user_rooms_tabbed);
 		
 		JPanel rooms_panel = new JPanel();
+		rooms_panel.setMaximumSize(new Dimension(70, 32767));
+		rooms_panel.setMinimumSize(new Dimension(70, 0));
+		rooms_panel.setPreferredSize(new Dimension(70, 0));
 		user_rooms_tabbed.addTab("Rooms", null, rooms_panel, null);
 		GridBagLayout gbl_rooms_panel = new GridBagLayout();
 		gbl_rooms_panel.columnWidths = new int[]{0, 0};
@@ -141,6 +163,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		rooms_panel.setLayout(gbl_rooms_panel);
 		
 		listRooms = new JList<String>(userRooms);
+		listRooms.setMaximumSize(new Dimension(50, 0));
+		listRooms.setMinimumSize(new Dimension(50, 0));
+		listRooms.setPreferredSize(new Dimension(50, 0));
+		listRooms.setValueIsAdjusting(true);
 		GridBagConstraints gbc_listRooms = new GridBagConstraints();
 		gbc_listRooms.insets = new Insets(0, 0, 5, 0);
 		gbc_listRooms.fill = GridBagConstraints.BOTH;
@@ -149,6 +175,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		rooms_panel.add(listRooms, gbc_listRooms);
 		
 		JButton btnAddRoom = new JButton("Add");
+		btnAddRoom.setPreferredSize(new Dimension(50, 29));
+		btnAddRoom.setMinimumSize(new Dimension(50, 29));
+		btnAddRoom.setMaximumSize(new Dimension(50, 29));
 		GridBagConstraints gbc_btnAddRoom = new GridBagConstraints();
 		gbc_btnAddRoom.gridx = 0;
 		gbc_btnAddRoom.gridy = 1;
@@ -157,6 +186,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		btnAddRoom.addActionListener(this);
 		
 		JPanel users_panel = new JPanel();
+		users_panel.setPreferredSize(new Dimension(0, 0));
+		users_panel.setMinimumSize(new Dimension(0, 0));
 		user_rooms_tabbed.addTab("Users", null, users_panel, null);
 		GridBagLayout gbl_users_panel = new GridBagLayout();
 		gbl_users_panel.columnWidths = new int[] {0, 0};
@@ -166,6 +197,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		users_panel.setLayout(gbl_users_panel);
 		
 		JList listUsers = new JList();
+		listUsers.setMaximumSize(new Dimension(50, 0));
+		listUsers.setMinimumSize(new Dimension(50, 0));
+		listUsers.setPreferredSize(new Dimension(50, 0));
 		GridBagConstraints gbc_listUsers = new GridBagConstraints();
 		gbc_listUsers.insets = new Insets(0, 0, 5, 0);
 		gbc_listUsers.fill = GridBagConstraints.BOTH;
@@ -174,6 +208,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		users_panel.add(listUsers, gbc_listUsers);
 		
 		JButton btnAddUser = new JButton("Add");
+		btnAddUser.setMaximumSize(new Dimension(50, 29));
+		btnAddUser.setMinimumSize(new Dimension(50, 29));
+		btnAddUser.setPreferredSize(new Dimension(50, 29));
 		GridBagConstraints gbc_btnAddUser = new GridBagConstraints();
 		gbc_btnAddUser.gridx = 0;
 		gbc_btnAddUser.gridy = 1;
@@ -182,9 +219,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		btnAddUser.addActionListener(this);
 		
 		JPanel chat_panel = new JPanel();
-		chat_panel.setPreferredSize(new Dimension(200, 0));
+		chat_panel.setMinimumSize(new Dimension(0, 0));
+		chat_panel.setPreferredSize(new Dimension(300, 0));
 		chat_panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_chat_panel = new GridBagConstraints();
+		gbc_chat_panel.weighty = 1.0;
+		gbc_chat_panel.weightx = 1.0;
 		gbc_chat_panel.insets = new Insets(5, 0, 13, 5);
 		gbc_chat_panel.fill = GridBagConstraints.BOTH;
 		gbc_chat_panel.gridx = 1;
@@ -199,7 +239,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		chat_panel.addComponentListener(this);
 		
 		listMessages = new JList<String>(userMessages);
-		listMessages.setCellRenderer(new MyCellRenderer(actualWidth));
 		GridBagConstraints gbc_messagesDisplay = new GridBagConstraints();
 		gbc_messagesDisplay.gridwidth = 2;
 		gbc_messagesDisplay.insets = new Insets(0, 0, 5, 0);
@@ -236,27 +275,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	}
 	
-	//by Andrew on StackOverflow (https://stackoverflow.com/questions/7861724/is-there-a-word-wrap-property-for-jlabel/7861833#7861833)
-	class MyCellRenderer extends DefaultListCellRenderer {
-		   public static final String HTML_1 = "<html><body style='width: ";
-		   public static final String HTML_2 = "px'>";
-		   public static final String HTML_3 = "</html>";
-		   private int width;
-
-		   public MyCellRenderer(int width) {
-		      this.width = width;
-		   }
-
-		   @Override
-		   public Component getListCellRendererComponent(JList list, Object value,
-		         int index, boolean isSelected, boolean cellHasFocus) {
-		      String text = HTML_1 + String.valueOf(width) + HTML_2 + value.toString()
-		            + HTML_3;
-		      return super.getListCellRendererComponent(list, text, index, isSelected,
-		            cellHasFocus);
-		   }
-
-		}
 	
 	public void createInputInterface(String inputInterfaceType) {
 		
@@ -436,11 +454,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			String timeStamp = ft.format(date);
 			String message = "[" + timeStamp + "] " + client.getName() + " : " + inputText ;
 			
-			//envoyer le nom du salon + utlisateur au serveur
-			//recevoir l'erreur si le salon est déjà existant
 			/*
 			 * METHODE SERVEUR
-			 * appel serveur si existante dans la liste
+			 * envoi au serveur du message à envoyer aux autres utilisareurs
 			*/
 			userMessages.addElement(message);
 			listMessages.setModel(userMessages);
