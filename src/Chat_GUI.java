@@ -180,7 +180,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_scrollPane.gridy = 0;
 		rooms_panel.add(scrollRooms, gbc_scrollPane);
 		listRooms.addListSelectionListener(this);
-
 		
 		JButton btnAddRoom = new JButton("Add");
 		btnAddRoom.setPreferredSize(new Dimension(50, 29));
@@ -236,6 +235,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_chat_panel.fill = GridBagConstraints.BOTH;
 		gbc_chat_panel.gridx = 1;
 		gbc_chat_panel.gridy = 0;
+		
 		frame.getContentPane().add(chat_panel, gbc_chat_panel);
 		GridBagLayout gbl_chat_panel = new GridBagLayout();
 		gbl_chat_panel.columnWidths = new int[]{0, 0};
@@ -243,7 +243,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbl_chat_panel.columnWeights = new double[]{1.0, 0.0};
 		gbl_chat_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		chat_panel.setLayout(gbl_chat_panel);
-		chat_panel.addComponentListener(this);
+		//chat_panel.addComponentListener(this);
 		
 		listMessages = new JList<String>(roomMessages);
 		JScrollPane scrollMessages = new JScrollPane(listMessages);
@@ -496,7 +496,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		// ajout conversation en cours
 		System.out.println("Switching room" + roomID);
 		roomMessages.addElement("Room " + roomID);
-		//roomMessages.addElement("message 1");
+		roomMessages.addElement("message 1");
 		roomMessages.addElement("message 2");
 		roomMessages.addElement("message 3");
 		
