@@ -2,14 +2,14 @@ import java.util.Date;
 
 public class Msg {
 	
-	private int userID;
+	private String userName;
 	private Date time;
 	private String msg;
 	
-	public Msg(int userID, Date time, String msg) {
+	public Msg(String userName, Date time, String msg) {
 		super();
 		this.msg = msg;
-		this.userID = userID;
+		this.userName = userName;
 		this.time = time;
 	}
 
@@ -21,12 +21,12 @@ public class Msg {
 		this.msg = msg;
 	}
 
-	public int getUserID() {
-		return userID;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setUserID(String userName) {
+		this.userName = userName;
 	}
 
 	public Date getTime() {

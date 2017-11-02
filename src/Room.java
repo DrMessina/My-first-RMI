@@ -5,10 +5,10 @@ public class Room {
 	
 	private int idRoom;
 	private boolean isPrivate;
-	private Hashtable<Integer, Client> tabUsers;
+	private Hashtable<String, Client> tabUsers;
 	private Hashtable<Integer, Msg> tabMsg;
 	
-	public Room(int idRoom, boolean isPrivate, Hashtable<Integer, Client> tabUsers, Hashtable<Integer, Msg> tabMsg) {
+	public Room(int idRoom, boolean isPrivate, Hashtable<String, Client> tabUsers, Hashtable<Integer, Msg> tabMsg) {
 		super();
 		this.tabUsers = tabUsers;
 		this.tabMsg = tabMsg;
@@ -16,11 +16,11 @@ public class Room {
 		this.isPrivate = isPrivate;
 	}
 
-	public Hashtable<Integer, Client> getTabUsers() {
+	public Hashtable<String, Client> getTabUsers() {
 		return tabUsers;
 	}
 
-	public void setTabUsers(Hashtable<Integer, Client> tabUsers) {
+	public void setTabUsers(Hashtable<String, Client> tabUsers) {
 		this.tabUsers = tabUsers;
 	}
 

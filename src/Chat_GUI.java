@@ -55,9 +55,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private DefaultListModel<String> roomMessages;
 	private JList<String> listUsers;
 	private DefaultListModel<String> roomUsers;
-	private Client client;
 	private Integer actualWidth;
 	private Room selectedRoom;
+	private String userName;
 	
 	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
@@ -392,14 +392,15 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			if (inputText.equals("")) {
 				lblErrorMessage.setText("You can't login without a nickname!");
 			} else {
-				client = new Client(-1, inputText, null);
+				userName = inputText;
 				//envoyer le login au serveur
 				//recevoir l'erreur si login déjà existant
 				boolean login_exists = false;
 				
 				//si login existe, lancer le chat, sinon afficher le message d'erreur
 				if (login_exists == false) {
-				        	createChatInterface(inputText);
+				        	createChatInterface(userName);
+				        	//creation niveau serveur
 				        	inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 				} else {
 					lblErrorMessage.setText("Nickname already taken!");
@@ -464,7 +465,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		        			Date date = new Date(evt.getWhen());
 		        			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
 		        			String timeStamp = ft.format(date);
-		        			String message = "[" + timeStamp + "] " + client.getName() + " : " + inputText ;
+		        			String message = "[" + timeStamp + "] " + userName + " : " + inputText ;
 			
 			/*
 			 * METHODE SERVEUR
@@ -479,23 +480,27 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void valueChanged(ListSelectionEvent evt) {
-		int roomID = listRooms.getSelectedIndex();
-		chatChange(roomID);
+		if (evt.getSource() == listRooms) {
+			int roomID = listRooms.getSelectedIndex();
+			chatChange(roomID);
+		}
+		
+		
+		//cron appel serveur
 		
 	}
 	
 	public void chatChange (int roomID) {
 		// Appel serveur pour avoir la bonne conversation avec l'id de la room
 		
-		roomMessages.clear();
 		// ajout conversation en cours
 		System.out.println("Switching room" + roomID);
 		roomMessages.addElement("Room " + roomID);
-		roomMessages.addElement("message 1");
+		//roomMessages.addElement("message 1");
 		roomMessages.addElement("message 2");
 		roomMessages.addElement("message 3");
 		
-		listMessages.setModel(roomMessages);
+		//listMessages.setModel(roomMessages);
 		int lastIndex = roomMessages.getSize() - 1;
 		listMessages.ensureIndexIsVisible(lastIndex);
 		
@@ -505,7 +510,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		catch (Exception e) {
 			
 		}
-		roomUsers.addElement(client.getName());
+		roomUsers.addElement(userName);
 		roomUsers.addElement("Other Users");
 		roomUsers.addElement("From Room " + roomID);
 		listUsers.setModel(roomUsers);
