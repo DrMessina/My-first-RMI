@@ -56,7 +56,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private JList<String> listUsers;
 	private DefaultListModel<String> roomUsers;
 	private Integer actualWidth;
-	private Room selectedRoom;
 	private String userName;
 	
 	
@@ -480,7 +479,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void valueChanged(ListSelectionEvent evt) {
-		if (evt.getSource() == listRooms) {
+		if (evt.getValueIsAdjusting() == true) {
 			int roomID = listRooms.getSelectedIndex();
 			chatChange(roomID);
 		}
