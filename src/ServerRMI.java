@@ -12,10 +12,10 @@ public class ServerRMI {
 			ChatSRV chatSRV = new ChatSRV();
 			//enregistrement dans le registre de noms RMI
 			Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI", chatSRV);
-			
+			System.out.println("server started");
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("server failed!");
+			System.err.println("server failed!");
 			e.printStackTrace();
 		}
 	}

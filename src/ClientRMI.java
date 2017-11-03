@@ -8,15 +8,15 @@ import java.rmi.RemoteException;
 
 public class ClientRMI {
 	
-	GUIInterface chatGUI;
+	GUIInterface chatGUIInterface;
 	InterfaceChatSRV serverInterface;
 
-public ClientRMI() {
-	chatGUI = new Chat_GUI();
 	
+public ClientRMI() {
 	javax.swing.SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-        	chatGUI.createInputInterface("login");
+        	chatGUIInterface = new Chat_GUI();
+        	chatGUIInterface.createInputInterface("login");
         	try {
 				 serverInterface = (InterfaceChatSRV) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI");
 			} catch (MalformedURLException | RemoteException | UnknownHostException | NotBoundException e) {
@@ -45,6 +45,7 @@ public void addRoom(String userName, int id) {
 		serverInterface.addRoom(user, id);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
+		System.out.println(userName);
 		e.printStackTrace();
 	}
 }

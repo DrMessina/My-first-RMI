@@ -34,6 +34,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private JFrame frame;
 	private JFrame inputframe;
+	private JButton btnAddRoom;
 	private JTextField messageInput;
 	private JTextField separateInput;
 	private JLabel lblTitle;
@@ -170,10 +171,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		rooms_panel.add(scrollRooms, gbc_scrollPane);
 		listRooms.addListSelectionListener(this);
 		
-		JButton btnAddRoom = new JButton("Add");
-		btnAddRoom.setPreferredSize(new Dimension(50, 29));
-		btnAddRoom.setMinimumSize(new Dimension(50, 29));
-		btnAddRoom.setMaximumSize(new Dimension(50, 29));
+		btnAddRoom = new JButton("Add");
+		btnAddRoom.setPreferredSize(new Dimension(60, 30));
+		btnAddRoom.setMinimumSize(new Dimension(60, 30));
+		btnAddRoom.setMaximumSize(new Dimension(60, 30));
 		GridBagConstraints gbc_btnAddRoom = new GridBagConstraints();
 		gbc_btnAddRoom.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAddRoom.gridx = 0;
@@ -437,14 +438,17 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    				userRooms.addElement(inputText);
 		    				listRooms.setModel(userRooms);
 		    				
+		    				
 		    				int lastIndex = userRooms.getSize() - 1;
-		    				
-		    				clientRMI.addRoom(userName,lastIndex);
-		    				chatChange(lastIndex);
-		    				listRooms.setSelectedIndex(lastIndex);
-		    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-		    				
-	
+		    				/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		    	    			public void run() {*/
+		    	    				System.out.println(userName);
+		    	    				clientRMI.addRoom(userName,lastIndex);
+		    	    				chatChange(lastIndex);
+		    	    				listRooms.setSelectedIndex(lastIndex);
+		    	    				//inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+		    	    			/*}
+		    	    		});*/
 				}
 			}	
 		} else if (command.equals("send")) {
@@ -505,7 +509,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		listUsers.setModel(roomUsers);
 	}
 	
-	
+	Chat_GUI (){
+		
+	}
 	
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {
