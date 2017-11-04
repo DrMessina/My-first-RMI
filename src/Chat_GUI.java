@@ -2,6 +2,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private JFrame frame;
 	private JFrame inputframe;
+	private JButton btnSubmit;
 	private JButton btnAddRoom;
 	private JTextField messageInput;
 	private JTextField separateInput;
@@ -46,9 +48,20 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private JList<String> listUsers;
 	private DefaultListModel<String> roomUsers;
 	private Integer actualWidth;
-	private ClientRMI clientRMI;
-	private String userName;
 	
+	private ClientInterface clientInterface;
+	
+	private String userName;
+	private int lastIndex;
+	
+	Chat_GUI (ClientInterface clientInterface){
+		this.clientInterface = clientInterface;
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            		createInputInterface("login");
+            }
+        });
+	}
 	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
 	public class MaxLengthTextDocument extends PlainDocument {
@@ -321,7 +334,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		lblErrorMessage = new JLabel(errorMessage);
 		lblErrorMessage.setForeground(Color.RED);
 		
-		JButton btnSubmit = new JButton(buttonText);
+		btnSubmit = new JButton(buttonText);
 		btnSubmit.setActionCommand(inputInterfaceType);
 		btnSubmit.addActionListener(this);
 		
@@ -373,32 +386,39 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		JButton btn = (JButton)evt.getSource();
-		String command = btn.getActionCommand();
-		System.err.println(command);
-		if (command.equals("login")) {
+		System.err.println(((JButton) evt.getSource()).getActionCommand());
+		if (((JButton) evt.getSource()).getActionCommand().equals("login")) {
 			String inputText = separateInput.getText();
 			//vérifier si vide
 			if (inputText.equals("")) {
 				lblErrorMessage.setText("You can't login without a nickname!");
 			} else {
-				userName = inputText;
+				userName = new String(inputText);
+				
 				//envoyer le login au serveur
 				//recevoir l'erreur si login déjà existant
 				boolean login_exists = false;
 				
 				//si login existe, lancer le chat, sinon afficher le message d'erreur
 				if (login_exists == false) {
-				        	createChatInterface(userName);
+					
+					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			            public void run() {
+			            		
+			            		createChatInterface(userName);
+			            		clientInterface.login(userName);
+			            }
+					});
+				        	
 				        	//creation niveau serveur
 				        	inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 				} else {
 					lblErrorMessage.setText("Nickname already taken!");
 				}
 			}	
-		} else if (command.equals("new_user")) {
+		} else if (((JButton) evt.getSource()).getActionCommand().equals("new_user")) {
 			createInputInterface("add_user");
-		} else if (command.equals("add_user")) {
+		} else if (((JButton) evt.getSource()).getActionCommand().equals("add_user")) {
 			String inputText = separateInput.getText();
 			//vérifier si vide
 			if (inputText.equals("")) {
@@ -416,9 +436,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				}
 			}	
 			// add user to room
-		} else if (command.equals("new_room")) {
+		} else if (((JButton) evt.getSource()).getActionCommand().equals("new_room")) {
 			createInputInterface("add_room");
-		} else if (command.equals("add_room")) {
+		} else if (((JButton) evt.getSource()).getActionCommand().equals("add_room")) {
 			String inputText = separateInput.getText();
 			//vérifier si vide
 			if (inputText.equals("")) {
@@ -439,11 +459,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    				listRooms.setModel(userRooms);
 		    				
 		    				
-		    				int lastIndex = userRooms.getSize() - 1;
+		    				lastIndex = userRooms.getSize() - 1;
 		    				/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
 		    	    			public void run() {*/
 		    	    				System.out.println(userName);
-		    	    				clientRMI.addRoom(userName,lastIndex);
+		    	    				System.out.println(lastIndex);
+		    	    				clientInterface.addRoom(userName,lastIndex);
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);
 		    	    				//inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
@@ -451,7 +472,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    		});*/
 				}
 			}	
-		} else if (command.equals("send")) {
+		} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
 		        		String inputText = messageInput.getText();
 		        		if (!inputText.equals("")) {
 		        			messageInput.setText("");
@@ -509,9 +530,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		listUsers.setModel(roomUsers);
 	}
 	
-	Chat_GUI (){
-		
-	}
+	
 	
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {
