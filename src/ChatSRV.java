@@ -4,16 +4,25 @@ import java.util.Hashtable;
 
 public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 
-	private static final long serialVersionUID = 3716834582298139732L;
+	private static final long serialVersionUID = 7699384301633005058L;
 	
 	Hashtable<Integer, Room> rooms = new Hashtable<>();
 	Hashtable<String, User> allUsers = new Hashtable<>();
 	
+	public Hashtable<Integer, Room> getRooms() throws RemoteException {
+		return rooms;
+	}
+
+	public void setRooms(Hashtable<Integer, Room> rooms) throws RemoteException {
+		this.rooms = rooms;
+	}
+
 	public ChatSRV() throws RemoteException{}
 
 	@Override
-	public void addRoom(User u,int id) throws RemoteException {
-		Room r = new Room(u,id);
+	public void addRoom(User u,int id, String name) throws RemoteException {
+		System.out.println(name);
+		Room r = new Room(u,id,name);
 		rooms.put(id, r);
 	}
 

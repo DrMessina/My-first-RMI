@@ -1,9 +1,15 @@
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 
-public class ServerRMI {
+public class ServerRMI implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6479220762872517522L;
+
 	public static void main(String[] argv) {
 		try {			
 			//lancement du registre de nom RMI(ne se fait qu'une seule fois

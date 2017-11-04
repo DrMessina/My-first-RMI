@@ -1,6 +1,10 @@
+import java.io.Serializable;
 
-
-public class Msg {
+public class Msg implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2833701869083276152L;
 	private User user;
 	private String msg;
 	private int position;

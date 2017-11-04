@@ -19,6 +19,10 @@ import java.awt.event.WindowEvent;
 import java.rmi.Remote;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import javax.swing.JLabel;
@@ -51,6 +55,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private ClientInterface clientInterface;
 	
+	private User user;
 	private String userName;
 	private int lastIndex;
 	
@@ -132,13 +137,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	 */
 	public void createChatInterface(String nickname) {
 		
+		user = clientInterface.getUser();
+		
         userRooms = new DefaultListModel<>();
         roomMessages = new DefaultListModel<>();
         roomUsers = new DefaultListModel<>();
-        userRooms.addElement("Room1");
-        userRooms.addElement("Room2");
-        userRooms.addElement("Room3");
-        userRooms.addElement("Room4");
+		
+        
 		
 		frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
@@ -409,7 +414,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			            		clientInterface.login(userName);
 			            }
 					});
-				        	
 				        	//creation niveau serveur
 				        	inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 				} else {
@@ -464,10 +468,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    			public void run() {*/
 		    	    				System.out.println(userName);
 		    	    				System.out.println(lastIndex);
-		    	    				clientInterface.addRoom(userName,lastIndex);
+		    	    				clientInterface.addRoom(user,lastIndex,inputText);
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);
-		    	    				//inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+		    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 		    	    			/*}
 		    	    		});*/
 				}
@@ -530,6 +534,17 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		listUsers.setModel(roomUsers);
 	}
 	
+	public void showAllRooms () {
+		Hashtable<Integer, Room> rooms = clientInterface.getRooms();
+		for (int position = 0; position<rooms.size();position++) {
+			String name = rooms.get(position).getName();
+			userRooms.add(position, name);
+		}
+	}
+	
+	/*public void update() {
+		
+	}*/
 	
 	
 	
