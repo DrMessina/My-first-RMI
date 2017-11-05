@@ -2,7 +2,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
+/**
+ * Interface remote du chat coté serveur
+ * @author Landry & Hendrik
+ *
+ */
 
 public interface InterfaceChatSRV extends Remote{
 	
