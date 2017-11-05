@@ -121,7 +121,13 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	@Override
 	public void disconnect(User u) throws RemoteException {
-		
+		allUsers.remove(u.getNom());
+		for (int i=0;i<rooms.size();i++) {
+			rooms.get(i).removeUser(u);
+			if (rooms.get(i).getUsers().isEmpty()) {
+				rooms.remove(i);
+			}
+		}
 		
 	}
 

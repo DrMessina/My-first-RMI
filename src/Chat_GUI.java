@@ -310,9 +310,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.setSize(600,400);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		manageDisconnection();
+		
 		allowTextSubmit(false);
 		
 	}
@@ -450,7 +450,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			    				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 			    				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			    			            public void run() {
-			    			            		//clientInterface.update ();
+			    			            		clientInterface.update ();
 			    			            }
 			    					});
 			    				} else {
@@ -565,7 +565,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
-	            		clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
+	            		//clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
 	            		chatChange(roomID);
 	            }
 			});
@@ -575,6 +575,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void chatChange (int roomID) {
+		System.out.println("change to " + roomID);
 		try {
 			roomMessages.clear();
 		} 
@@ -583,12 +584,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		}
 		
 		// Appel serveur pour avoir la bonne conversation avec l'id de la room
+		
 		actualRoom = clientInterface.getRooms().get(roomID);
 		if (actualRoom.getIsPrivate()) {
 			if (actualRoom.getUsers().containsKey(user.getNom())) {
 				user_rooms_tabbed.addTab("Users", null, users_panel, null);
 				Hashtable<Integer, Msg> messages = actualRoom.getMessages();
-				//if (!messages.isEmpty()) {
+				if (!messages.isEmpty()) {
 					for (int position = 0; position<messages.size();position++) {
 						System.out.println(position);
 						String msg = messages.get(position).getMessage();
@@ -597,16 +599,18 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    				}
 					allowTextSubmit(true);
 					System.out.println("Model set");
-					//}
-				} else {
-					user_rooms_tabbed.remove(1);
-					btnAddUser.setVisible(false);
-					roomMessages.add(0, "!!! PRIVATE ROOM !!!");
-					roomMessages.add(1, "--- You are not allowed to enter this room ---");
-					
-					allowTextSubmit(false);
-				
 				}
+			} else {
+				if (user_rooms_tabbed.getTabCount() > 1) {
+					user_rooms_tabbed.remove(1);
+				}
+				btnAddUser.setVisible(false);
+				roomMessages.add(0, "!!! PRIVATE ROOM !!!");
+				roomMessages.add(1, "--- You are not allowed to enter this room ---");
+					
+				allowTextSubmit(false);
+				
+			}
 		} else {
 			user_rooms_tabbed.addTab("Users", null, users_panel, null);
 			btnAddUser.setVisible(false);
@@ -622,10 +626,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				System.out.println("Model set");
 			}
 		}
-		// ajout conversation en cours
-		
-		
-		
 		
 		listMessages.setModel(roomMessages);
 		int lastIndex = roomMessages.getSize() - 1;
@@ -644,6 +644,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			roomUsers.addElement(roomUser);
 		}
 		listUsers.setModel(roomUsers);
+            
 	}
 	
 	public void showAllRooms () {
@@ -717,7 +718,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	public void manageDisconnection () {
 		frame.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent evt){
-				clientInterface.disconnect(user);
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		            public void run() {
+		            		clientInterface.disconnect(user);
+		            		System.out.println("déconnection");
+		            		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		            }
+				});
 			}
 		});
 	}
