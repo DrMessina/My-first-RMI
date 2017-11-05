@@ -142,6 +142,16 @@ public boolean addGlobalUser(String u) {
 	return false;
 }
 
+public boolean inviteUser(User userAllow,int roomId) {
+	try {
+		return serverInterface.inviteUser(userAllow, roomId);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return false;
+}
+
 	/*public Chat_client() {
 		
 		chatGUI = new Chat_GUI();

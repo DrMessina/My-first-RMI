@@ -12,4 +12,5 @@ public interface ClientInterface {
 	public void sendMsg(Msg m, int roomId);
 	public void update ();
 	public boolean addGlobalUser(String user);
+	public boolean inviteUser(User userAllow,int roomId);
 }
