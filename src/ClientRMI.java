@@ -152,6 +152,15 @@ public boolean inviteUser(User userAllow,int roomId) {
 	return false;
 }
 
+public void disconnect(User u) {
+	try {
+		serverInterface.disconnect(u);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
 	/*public Chat_client() {
 		
 		chatGUI = new Chat_GUI();

@@ -17,7 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.rmi.Remote;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,8 +44,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private JFrame frame;
 	private JFrame inputframe;
+	private JTabbedPane user_rooms_tabbed;
+	private JPanel users_panel;
 	private JButton btnSubmit;
 	private JButton btnAddRoom;
+	private JButton btnAddUser;
 	private JButton btnSend;
 	private JTextField messageInput;
 	private JTextField separateInput;
@@ -174,7 +179,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.getContentPane().setLayout(gridBagLayout);
 		
 		
-		JTabbedPane user_rooms_tabbed = new JTabbedPane(JTabbedPane.TOP);
+		user_rooms_tabbed = new JTabbedPane(JTabbedPane.TOP);
 		user_rooms_tabbed.setMaximumSize(new Dimension(60, 0));
 		user_rooms_tabbed.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		user_rooms_tabbed.setPreferredSize(new Dimension(60, 0));
@@ -220,10 +225,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		btnAddRoom.setActionCommand("new_room");
 		btnAddRoom.addActionListener(this);
 		
-		JPanel users_panel = new JPanel();
+		users_panel = new JPanel();
 		users_panel.setPreferredSize(new Dimension(0, 0));
 		users_panel.setMinimumSize(new Dimension(0, 0));
-		user_rooms_tabbed.addTab("Users", null, users_panel, null);
 		GridBagLayout gbl_users_panel = new GridBagLayout();
 		gbl_users_panel.columnWidths = new int[] {0, 0};
 		gbl_users_panel.rowHeights = new int[] {0, 0, 0};
@@ -240,7 +244,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_scrollUsers.gridy = 0;
 		users_panel.add(scrollUsers, gbc_scrollUsers);
 		
-		JButton btnAddUser = new JButton("Add");
+		btnAddUser = new JButton("Add");
 		btnAddUser.setMaximumSize(new Dimension(50, 29));
 		btnAddUser.setMinimumSize(new Dimension(50, 29));
 		btnAddUser.setPreferredSize(new Dimension(50, 29));
@@ -307,7 +311,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
+		
+		manageDisconnection();
 		allowTextSubmit(false);
 		
 	}
@@ -581,6 +586,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		actualRoom = clientInterface.getRooms().get(roomID);
 		if (actualRoom.getIsPrivate()) {
 			if (actualRoom.getUsers().containsKey(user.getNom())) {
+				user_rooms_tabbed.addTab("Users", null, users_panel, null);
 				Hashtable<Integer, Msg> messages = actualRoom.getMessages();
 				//if (!messages.isEmpty()) {
 					for (int position = 0; position<messages.size();position++) {
@@ -589,11 +595,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 						System.out.println(msg);
 						roomMessages.add(position, msg);
 		    				}
-					listMessages.setModel(roomMessages);
 					allowTextSubmit(true);
 					System.out.println("Model set");
 					//}
 				} else {
+					user_rooms_tabbed.remove(1);
+					btnAddUser.setVisible(false);
 					roomMessages.add(0, "!!! PRIVATE ROOM !!!");
 					roomMessages.add(1, "--- You are not allowed to enter this room ---");
 					
@@ -601,6 +608,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				
 				}
 		} else {
+			user_rooms_tabbed.addTab("Users", null, users_panel, null);
+			btnAddUser.setVisible(false);
 			Hashtable<Integer, Msg> messages = actualRoom.getMessages();
 			if (!messages.isEmpty()) {
 				for (int position = 0; position<messages.size();position++) {
@@ -609,7 +618,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					System.out.println(msg);
 					roomMessages.add(position, msg);
 	    				}
-				listMessages.setModel(roomMessages);
 				allowTextSubmit(true);
 				System.out.println("Model set");
 			}
@@ -706,7 +714,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		}
 	}
 	
-	
+	public void manageDisconnection () {
+		frame.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent evt){
+				clientInterface.disconnect(user);
+			}
+		});
+	}
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {
 		

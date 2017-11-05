@@ -80,8 +80,11 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 			System.out.println(u.getNom());
 		}
 		if(this.rooms.containsKey(roomId)) {
-			rooms.get(roomId).addUser(u);
-			System.out.println("Added user server side");
+			Room actualRoom = rooms.get(roomId);
+			if (!actualRoom.getIsPrivate()) {
+				rooms.get(roomId).addUser(u);
+				System.out.println("Added user server side");
+			}
 		}
 	}
 
@@ -117,7 +120,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	}
 
 	@Override
-	public void removeUser(User u) throws RemoteException {
+	public void disconnect(User u) throws RemoteException {
 		
 		
 	}
@@ -131,11 +134,6 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException {
 		
 	}*/
-	
-	public void shutdown () {
-		rooms.clear();
-		allUsers.clear();
-	}
 
 	
 
