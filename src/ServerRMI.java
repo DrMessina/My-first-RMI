@@ -2,15 +2,11 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.server.UnicastRemoteObject;
-
+/**
+ * Classe de demarrage du server RMI
+ * @author Landry & Hendrik
+ */
 public class ServerRMI implements Serializable {
-	
-	
-	/**
-	 * Classe de demarrage du server RMI
-	 * @author amata
-	 */
 	private static final long serialVersionUID = 6479220762872517522L;
 	
 	/**
