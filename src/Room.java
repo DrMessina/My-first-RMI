@@ -65,6 +65,7 @@ public class Room implements Serializable {
 	}
 	//ajoute un user dans la room
 	public void addUser(User u) {
+		System.out.println(u.getNom() + " added to room");
 		this.users.put(u.getNom(), u);
 	}
 	

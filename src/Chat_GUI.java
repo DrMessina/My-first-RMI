@@ -513,8 +513,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void valueChanged(ListSelectionEvent evt) {
 		if (evt.getValueIsAdjusting() == true) {
-			int oldRoomID = evt.getFirstIndex();
-			int roomID = evt.getLastIndex();
+			int roomID = listRooms.getSelectedIndex();
+			int oldRoomID = roomID == evt.getFirstIndex() ? evt.getLastIndex() : evt.getFirstIndex();
 			System.out.println("Change from Room " + oldRoomID + " to Room " + roomID );
 			
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {

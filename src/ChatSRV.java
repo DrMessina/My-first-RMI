@@ -42,6 +42,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		}
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
+			System.out.println("Added user server side");
 		}
 	}
 
