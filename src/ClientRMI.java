@@ -42,10 +42,11 @@ public static void main(String[] argv) {
 		
 	}
 
-public void login(String userName) {
+public User login(String userName) {
 			//manque ajout serveur
         		user = new User(userName);
         		System.out.println(userName + " logged in");
+        		return user;
 }
 
 @Override
@@ -53,10 +54,10 @@ public void addRoom(User user, int id, String name) {
 	
 	try {
 		serverInterface.addRoom(user, id, name);
-		System.out.println("add room " + user.getNom());
+		System.out.println("add room " + name);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
-		System.out.println("didn't add room" + user.getNom());
+		System.out.println("didn't add room" + name);
 		e.printStackTrace();
 	}
 }

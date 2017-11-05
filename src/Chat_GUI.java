@@ -61,6 +61,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private int lastIndex;
 	
 	private Hashtable<Integer, Room> rooms;
+	private Room actualRoom;
 	
 	Chat_GUI (ClientInterface clientInterface){
 		this.clientInterface = clientInterface;
@@ -155,7 +156,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
         roomMessages = new DefaultListModel<>();
         roomUsers = new DefaultListModel<>();
 		
-        
         showAllRooms ();
             		
 		frame = new JFrame();
@@ -422,7 +422,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					
 					javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			            public void run() {
-			            		clientInterface.login(userName);
+			            		user = clientInterface.login(userName);
 			            }
 					});
 				        	//creation niveau serveur
@@ -517,9 +517,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			int roomID = evt.getLastIndex();
 			System.out.println("Change from Room " + oldRoomID + " to Room " + roomID );
 			
-			clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
+	            		clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
 	            		chatChange(roomID);
 	            }
 			});
@@ -532,7 +532,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void chatChange (int roomID) {
 		// Appel serveur pour avoir la bonne conversation avec l'id de la room
-		
+		actualRoom = clientInterface.getRooms().get(roomID);
 		// ajout conversation en cours
 		System.out.println("Switching room" + roomID);
 		roomMessages.addElement("Room " + roomID);
@@ -548,13 +548,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			roomUsers.clear();
 		} 
 		catch (Exception e) {
-			System.out.println("roomUsers cleared");
+			System.out.println("roomUsers not cleared");
 		}
-		Hashtable<String,User> hashRoomUsers = clientInterface.getRooms().get(roomID).getUsers();
-		System.out.println(hashRoomUsers.size());
-		for (int position = 0; position<=hashRoomUsers.size();position++) {
-			System.out.println(hashRoomUsers.keySet().toString());
-			roomUsers.addElement(hashRoomUsers.keySet().toString());
+		Set<String> setRoomUsers = actualRoom.getUsers().keySet();
+		System.out.println(setRoomUsers.size());
+		for (String roomUser : setRoomUsers) {
+			System.out.println(roomUser);
+			roomUsers.addElement(roomUser);
 		}
 		listUsers.setModel(roomUsers);
 	}
@@ -565,12 +565,16 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
             public void run() {
             		System.out.println("try to get rooms");
             		rooms = clientInterface.getRooms();
+            		System.out.println("Rooms in GUI");
             		if (!rooms.isEmpty()) {
-            			for (int position = 0; position<=rooms.size();position++) {
-                			String name = rooms.get(position).getName();
-                			userRooms.add(position, name);
+            			for (int position = 0; position<rooms.size();position++) {
+            				System.out.println(position);
+						String name = rooms.get(position).getName();
+						System.out.println(name);
+						userRooms.add(position, name);
                 		}
             			listRooms.setModel(userRooms);
+            			System.out.println("Model set");
             		}
             }
 		});   

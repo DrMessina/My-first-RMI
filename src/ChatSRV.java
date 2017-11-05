@@ -33,8 +33,13 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	@Override
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
-		quitRoom(oldRoomId, u.getNom(), positionMsg);
-		System.out.println(u.getNom());
+		System.out.println("On server");
+		System.out.println(roomId);
+		System.out.println(oldRoomId);
+		if (oldRoomId != roomId) {
+			quitRoom(oldRoomId, u.getNom(), positionMsg);
+			System.out.println(u.getNom());
+		}
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 		}
