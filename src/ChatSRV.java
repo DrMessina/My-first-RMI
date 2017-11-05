@@ -33,9 +33,13 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void changeRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
-		quitRoom(oldRoomId, u.getNom(), positionMsg);
+		if (oldRoomId != roomId) {
+			quitRoom(oldRoomId, u.getNom(), positionMsg);
+			System.out.println(u.getNom());
+		}else{
+			return;
+		}
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 			Hashtable<String, Integer>lastCheck =rooms.get(roomId).getLastCheck();
@@ -45,23 +49,9 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 				rooms.get(roomId).setLastUserCheck(u.getNom(), (lastCheck.size()-1));
 				getMsg(rooms.get(roomId).getLastUserCheck(u.getNom()),roomId);
 			}
-=======
-	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
-		System.out.println("On server");
-		System.out.println(roomId);
-		System.out.println(oldRoomId);
-		if (oldRoomId != roomId) {
-			quitRoom(oldRoomId, u.getNom(), positionMsg);
-			System.out.println(u.getNom());
-		}
-		if(this.rooms.containsKey(roomId)) {
-			rooms.get(roomId).addUser(u);
-			System.out.println("Added user server side");
->>>>>>> 212dc4d03779d0d696d677299ec517997f267742
 		}
 	}
 
-	
 	@Override
 	public void sendMsg(Msg m, int roomId) throws RemoteException {
 		rooms.get(roomId).addMsg(m);
@@ -105,6 +95,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		
 	}
 
+	
 
 
 }
