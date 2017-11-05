@@ -44,6 +44,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private JFrame inputframe;
 	private JButton btnSubmit;
 	private JButton btnAddRoom;
+	private JButton btnSend;
 	private JTextField messageInput;
 	private JTextField separateInput;
 	private JLabel lblTitle;
@@ -293,7 +294,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		messageInput.setDocument(maxLength);
 
 		
-		JButton btnSend = new JButton("Send");
+		btnSend = new JButton("Send");
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 1;
@@ -307,6 +308,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
+		allowTextSubmit(false);
+		
 	}
 	
 	
@@ -401,6 +404,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		inputframe.setSize(300,200);
 		inputframe.setLocationRelativeTo(null);
 		inputframe.setVisible(true);
+		
 		
 		
 		
@@ -566,10 +570,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void chatChange (int roomID) {
-		// Appel serveur pour avoir la bonne conversation avec l'id de la room
-		actualRoom = clientInterface.getRooms().get(roomID);
-		// ajout conversation en cours
-		
 		try {
 			roomMessages.clear();
 		} 
@@ -577,17 +577,47 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			System.out.println("roomMessages not cleared");
 		}
 		
-		Hashtable<Integer, Msg> messages = actualRoom.getMessages();
-		if (!messages.isEmpty()) {
-			for (int position = 0; position<messages.size();position++) {
-				System.out.println(position);
-				String msg = messages.get(position).getMessage();
-				System.out.println(msg);
-				roomMessages.add(position, msg);
-    				}
-			listMessages.setModel(roomMessages);
-			System.out.println("Model set");
+		// Appel serveur pour avoir la bonne conversation avec l'id de la room
+		actualRoom = clientInterface.getRooms().get(roomID);
+		if (actualRoom.getIsPrivate()) {
+			if (actualRoom.getUsers().containsKey(user.getNom())) {
+				Hashtable<Integer, Msg> messages = actualRoom.getMessages();
+				//if (!messages.isEmpty()) {
+					for (int position = 0; position<messages.size();position++) {
+						System.out.println(position);
+						String msg = messages.get(position).getMessage();
+						System.out.println(msg);
+						roomMessages.add(position, msg);
+		    				}
+					listMessages.setModel(roomMessages);
+					allowTextSubmit(true);
+					System.out.println("Model set");
+					//}
+				} else {
+					roomMessages.add(0, "!!! PRIVATE ROOM !!!");
+					roomMessages.add(1, "--- You are not allowed to enter this room ---");
+					
+					allowTextSubmit(false);
+				
+				}
+		} else {
+			Hashtable<Integer, Msg> messages = actualRoom.getMessages();
+			if (!messages.isEmpty()) {
+				for (int position = 0; position<messages.size();position++) {
+					System.out.println(position);
+					String msg = messages.get(position).getMessage();
+					System.out.println(msg);
+					roomMessages.add(position, msg);
+	    				}
+				listMessages.setModel(roomMessages);
+				allowTextSubmit(true);
+				System.out.println("Model set");
+			}
 		}
+		// ajout conversation en cours
+		
+		
+		
 		
 		listMessages.setModel(roomMessages);
 		int lastIndex = roomMessages.getSize() - 1;
@@ -664,6 +694,16 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		}
 		
 		System.out.println("I update");
+	}
+	
+	public void allowTextSubmit (boolean allowed) {
+		if (allowed) {
+			messageInput.setEnabled(true);
+			btnSend.setEnabled(true);
+		} else {
+			messageInput.setEnabled(false);
+			btnSend.setEnabled(false);
+		}
 	}
 	
 	
