@@ -66,6 +66,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private Hashtable<Integer, Room> rooms;
 	private Room actualRoom;
+	private int roomID;
 	private boolean isPrivate;
 	
 	Chat_GUI (ClientInterface clientInterface){
@@ -458,16 +459,25 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				if (inputText.equals("")) {
 					lblErrorMessage.setText("No nickname has been mentionned!");
 				} else {
+					
+					
 					//envoyer le nom d'utilisateur au serveur
 					//recevoir l'erreur si le login est déjà existant
-					boolean user_exists = false;
-					
-					//si l'utilisateur existe, l'ajouter au salon, sinon afficher le message d'erreur
-					if (user_exists == true) {
-						//ajout à la room
-					} else {
-						lblErrorMessage.setText("The user has to be online!");
-					}
+					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+    	    					public void run() {
+    	    						boolean userInvited = clientInterface.inviteUser(new User(inputText),roomID);
+    	    						System.out.println(inputText + " invited " + userInvited);
+    	    						//si l'utilisateur existe, l'ajouter au salon, sinon afficher le message d'erreur
+    	    						if (userInvited == false) {
+    	    							lblErrorMessage.setText("The user has to be online!");
+    	    						} else {
+    	    							roomUsers.addElement(inputText);
+    				    				listUsers.setModel(roomUsers);
+    	    							inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+    	    						}
+    	    						
+    	    					}
+					});
 				}	
 				// add user to room
 			} else if (((JButton) evt.getSource()).getActionCommand().equals("new_room")) {
@@ -488,9 +498,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 						 * METHODE SERVEUR
 						 * ajout de la room + utilisateur au server
 						*/
-						
-							
-			    				userRooms.addElement(inputText);
+							String roomName = null;
+							if (isPrivate) {
+								roomName = "[Private] " + inputText;
+							} else {
+								roomName = inputText;
+							}
+			    				userRooms.addElement(roomName);
 			    				listRooms.setModel(userRooms);
 			    				
 			    				
@@ -536,7 +550,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void valueChanged(ListSelectionEvent evt) {
 		if (evt.getValueIsAdjusting() == true) {
-			int roomID = listRooms.getSelectedIndex();
+			roomID = listRooms.getSelectedIndex();
 			int oldRoomID = roomID == evt.getFirstIndex() ? evt.getLastIndex() : evt.getFirstIndex();
 			System.out.println("Change from Room " + oldRoomID + " to Room " + roomID );
 			
