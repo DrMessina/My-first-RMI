@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public interface ClientInterface {
-	public void addRoom(User user, int id, String roomName);
+	public void addRoom(User user, int id, String roomName, boolean isPrivate);
 	public User login(String userName);
 	public User getUser();
 	public void setUser(User user);

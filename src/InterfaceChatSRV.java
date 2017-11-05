@@ -6,7 +6,7 @@ import java.util.Hashtable;
 
 public interface InterfaceChatSRV extends Remote{
 	
-	public void addRoom(User u, int id, String roomName) throws RemoteException;
+	public void addRoom(User u, int id, String roomName, boolean isPrivate) throws RemoteException;
 	public boolean addGlobalUser(User user, String u) throws RemoteException;
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException;
 	//public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException;

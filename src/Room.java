@@ -12,11 +12,12 @@ public class Room implements Serializable {
 	private boolean isPrivate;
 	
 	//constructor for room creation
-	public Room(User u,int id, String name) {
+	public Room(User u,int id, String name, boolean isPrivate) {
 		this.users.put(u.getNom(), u);
 		this.IDSalon=id;
 		this.name = name;
 		this.messages.put(0, new Msg(null, "--- Welcome in room " + name + " ---",0));
+		this.isPrivate = isPrivate;
 		lastCheck.put(u.getNom(), 0);
 	}
 

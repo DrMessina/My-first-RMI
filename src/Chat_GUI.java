@@ -54,6 +54,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private DefaultListModel<String> roomMessages;
 	private JList<String> listUsers;
 	private DefaultListModel<String> roomUsers;
+	private JCheckBox chckbxPrivate;
 	private Integer actualWidth;
 	
 	private ClientInterface clientInterface;
@@ -65,6 +66,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	private Hashtable<Integer, Room> rooms;
 	private Room actualRoom;
+	private boolean isPrivate;
 	
 	Chat_GUI (ClientInterface clientInterface){
 		this.clientInterface = clientInterface;
@@ -328,8 +330,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		inputframe.getContentPane().setLayout(gridBagLayout);
 		
 		//Checkbox pour signaler un salon privé (invisible, sauf pour l'ajout d'un salon)
-		JCheckBox chckbxPrivate = new JCheckBox("Private");
+		chckbxPrivate = new JCheckBox("Private");
 		chckbxPrivate.setVisible(false);
+		chckbxPrivate.addActionListener(this);
 		
 		if (inputInterfaceType == "login") {
 			inputTitle = "Login";
@@ -409,6 +412,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		System.err.println(((JButton) evt.getSource()).getActionCommand());
+		if (evt.getSource() == chckbxPrivate) {
+			//AbstractButton privateAbstractBtn = (AbstractButton) evt.getSource();
+	        //boolean selected = privateAbstractBtn.getModel().isSelected();
+	        isPrivate = chckbxPrivate.isSelected();
+		}
 		if (((JButton) evt.getSource()).getActionCommand().equals("login")) {
 			String inputText = separateInput.getText();
 			//vérifier si vide
@@ -495,7 +503,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    				System.out.println(lastIndex);
 		    	    				
 		    	    				//user = clientInterface.getUser();
-		    	    				clientInterface.addRoom(user,lastIndex,inputText);
+		    	    				clientInterface.addRoom(user,lastIndex,inputText, isPrivate);
 		    	    				
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);

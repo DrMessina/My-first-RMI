@@ -54,10 +54,10 @@ public User login(String userName) {
 }
 
 
-public void addRoom(User user, int id, String roomName) {
+public void addRoom(User user, int id, String roomName, boolean isPrivate) {
 	
 	try {
-		serverInterface.addRoom(user, id, roomName);
+		serverInterface.addRoom(user, id, roomName, isPrivate);
 		System.out.println("add room " + roomName);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block

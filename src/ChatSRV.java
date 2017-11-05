@@ -24,8 +24,9 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	}
 
 	
-	public void addRoom(User u,int id, String roomName) throws RemoteException {
-		Room r = new Room(u,id,roomName);
+	public void addRoom(User u,int id, String roomName, boolean isPrivate) throws RemoteException {
+		Room r = new Room(u,id,roomName, isPrivate);
+		
 		rooms.put(id, r);
 		System.out.println(roomName);
 		System.out.println(allUsers.toString());
