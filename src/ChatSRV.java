@@ -2,10 +2,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
-/**
- * Classe distante
- * @author Landry & Hendrik
- */
+
 public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	private static final long serialVersionUID = 7699384301633005058L;
@@ -21,6 +18,9 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	public ChatSRV() throws RemoteException{
 		rooms = new Hashtable<>();
 		allUsers = new Hashtable<>();
+		rooms.clear();
+		allUsers.clear();
+		System.out.println(allUsers.toString());
 	}
 
 	
@@ -92,14 +92,10 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	
 
 	@Override
-	public boolean inviteUser(User userAllow,int roomId) throws RemoteException {
-		if(this.allUsers.containsKey(userAllow.getNom())) {
+	public void inviteUser(User userAllow,int roomId) throws RemoteException {
+		if(this.allUsers.contains(userAllow)) {
 			rooms.get(roomId).addUser(userAllow);
-			System.out.println("invite user");
-			return true;
 		}
-		System.out.println("invite user rejected");
-		return false;
 	}
 	
 

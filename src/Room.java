@@ -1,9 +1,16 @@
 import java.io.Serializable;
 import java.util.Hashtable;
-
+/** 
+ * Classe qui permet de crée un salon de discussion.
+ * 
+ * @author Landry & Hendrik
+ */
 public class Room implements Serializable {
+	/**
+	 * 
+	 * @param
+	 */
 	private static final long serialVersionUID = 2833701869083276152L;
-	
 	private Hashtable<String, User> users = new Hashtable<>();
 	private Hashtable<Integer, Msg> messages = new Hashtable<>();
 	private Hashtable<String, Integer> lastCheck = new Hashtable<>();
