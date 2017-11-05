@@ -1,3 +1,5 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -6,8 +8,10 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Timer;
+
+import javax.swing.Timer;
 
 public class ClientRMI extends UnicastRemoteObject implements ClientInterface{
 	
@@ -18,11 +22,12 @@ public class ClientRMI extends UnicastRemoteObject implements ClientInterface{
 	GUIInterface chatGUIInterface;
 	InterfaceChatSRV serverInterface;
 	User user;
+	Timer timer;
 
 	
 public ClientRMI() throws RemoteException{
-        	chatGUIInterface = new Chat_GUI(this);
-        	//updater = new Timer (3000, chatGUIInterface);
+        	chatGUIInterface = new Chat_GUI(this);   
+        	
         	try {
 				serverInterface = (InterfaceChatSRV) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI");
 			} catch (MalformedURLException | RemoteException | UnknownHostException | NotBoundException e) {
@@ -49,7 +54,7 @@ public User login(String userName) {
         		return user;
 }
 
-@Override
+
 public void addRoom(User user, int id, String name) {
 	
 	try {
@@ -82,7 +87,7 @@ public Hashtable<Integer, Room> getRooms() {
 	
 }
 
-@Override
+
 public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) {
 	try {
 		serverInterface.getIntoRoom(roomId, oldRoomId, u, positionMsg);
@@ -93,9 +98,9 @@ public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) {
 	}
 }
 
-public Msg getMsg() {
+public ArrayList<String> getMsg(int position, int roomId) {
 	try {
-		return serverInterface.getMsg();
+		return serverInterface.getMsg(position, roomId);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -103,7 +108,26 @@ public Msg getMsg() {
 	return null;
 }
 
+public void sendMsg(Msg m, int roomId) {
+	try {
+		serverInterface.sendMsg(m, roomId);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 
+public void update () {
+	timer =	new Timer (delay,update);
+	timer.start();
+}
+
+int delay = 3000;
+ActionListener update = new ActionListener() {
+	public void actionPerformed(ActionEvent evt) {
+		chatGUIInterface.update();
+	}
+};
 
 	/*public Chat_client() {
 		

@@ -1,5 +1,7 @@
 import javax.swing.JFrame; 
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SingleSelectionModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
 import javax.swing.AbstractButton;
@@ -201,6 +203,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_scrollPane.gridy = 0;
 		rooms_panel.add(scrollRooms, gbc_scrollPane);
 		listRooms.addListSelectionListener(this);
+		listRooms.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		btnAddRoom = new JButton("Add");
 		btnAddRoom.setPreferredSize(new Dimension(60, 30));
@@ -428,6 +431,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				        	//creation niveau serveur
 					createChatInterface(userName);
 				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			            public void run() {
+			            		clientInterface.update ();
+			            }
+					});
 				} else {
 					lblErrorMessage.setText("Nickname already taken!");
 				}
@@ -483,12 +491,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    				
 		    	    				user = clientInterface.getUser();
 		    	    				clientInterface.addRoom(user,lastIndex,inputText);
+		    	    				
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);
 		    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 		    	    			}
 		    	    		});
-				}
+		    		}
 			}	
 		} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
 		        		String inputText = messageInput.getText();
@@ -498,15 +507,20 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		        			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
 		        			String timeStamp = ft.format(date);
 		        			String message = "[" + timeStamp + "] " + userName + " : " + inputText ;
-			
-			/*
-			 * METHODE SERVEUR
-			 * envoi au serveur du message à envoyer aux autres utilisareurs
-			*/
 		        			roomMessages.addElement(message);
 		        			listMessages.setModel(roomMessages);
 		        			int lastIndex = roomMessages.getSize() - 1;
 		        			listMessages.ensureIndexIsVisible(lastIndex);
+		        			
+		        			Msg m = new Msg(user, message, lastIndex);
+	
+		        			clientInterface.sendMsg(m, actualRoom.gtIDsalon());
+			/*
+			 * METHODE SERVEUR
+			 * envoi au serveur du message à envoyer aux autres utilisareurs
+			*/
+		        			
+		        			
 		        		}
 		}
 	}
@@ -535,13 +549,24 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		actualRoom = clientInterface.getRooms().get(roomID);
 		// ajout conversation en cours
 		
+		try {
+			roomMessages.clear();
+		} 
+		catch (Exception e) {
+			System.out.println("roomMessages not cleared");
+		}
 		
-		
-		System.out.println("Switching room" + roomID);
-		roomMessages.addElement("Room " + roomID);
-		roomMessages.addElement("message 1");
-		roomMessages.addElement("message 2");
-		roomMessages.addElement("message 3");
+		Hashtable<Integer, Msg> messages = actualRoom.getMessages();
+		if (!messages.isEmpty()) {
+			for (int position = 0; position<messages.size();position++) {
+				System.out.println(position);
+				String msg = messages.get(position).getMessage();
+				System.out.println(msg);
+				roomMessages.add(position, msg);
+    				}
+			listMessages.setModel(roomMessages);
+			System.out.println("Model set");
+		}
 		
 		listMessages.setModel(roomMessages);
 		int lastIndex = roomMessages.getSize() - 1;
@@ -595,9 +620,26 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		});
 	}
 	
-	/*public void update() {
+	
+	public void update() {
+		userRooms.clear();
+		showAllRooms();
+		try {
+			int roomId = actualRoom.gtIDsalon();
+			System.out.println("Actual room id is " + roomId);
+			
+			chatChange(roomId);
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            		listRooms.setSelectedIndex(roomId);
+	            }
+			});
+		} catch (Exception e){
+			System.out.println("Didn't update messages and users in rooms");
+		}
 		
-	}*/
+		System.out.println("I update");
+	}
 	
 	
 	
