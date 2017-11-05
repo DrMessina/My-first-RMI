@@ -13,5 +13,4 @@ public interface InterfaceChatSRV extends Remote{
 	public void removeUser(User u) throws RemoteException;
 	public void quitRoom(int idRoom, String nom, int positionMsg)throws RemoteException;
 	public Hashtable<Integer, Room> getRooms() throws RemoteException;
-	public void setRooms(Hashtable<Integer, Room> rooms) throws RemoteException;
 }

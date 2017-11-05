@@ -19,6 +19,7 @@ import java.awt.event.WindowEvent;
 import java.rmi.Remote;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +59,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private User user;
 	private String userName;
 	private int lastIndex;
+	
+	private Hashtable<Integer, Room> rooms;
 	
 	Chat_GUI (ClientInterface clientInterface){
 		this.clientInterface = clientInterface;
@@ -137,14 +140,15 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	 */
 	public void createChatInterface(String nickname) {
 		
-		user = clientInterface.getUser();
-		
         userRooms = new DefaultListModel<>();
         roomMessages = new DefaultListModel<>();
         roomUsers = new DefaultListModel<>();
 		
-        
-		
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            		showAllRooms ();
+            }
+        });
 		frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -468,6 +472,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    			public void run() {*/
 		    	    				System.out.println(userName);
 		    	    				System.out.println(lastIndex);
+		    	    				user = clientInterface.getUser();
 		    	    				clientInterface.addRoom(user,lastIndex,inputText);
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);
@@ -518,7 +523,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		roomMessages.addElement("message 2");
 		roomMessages.addElement("message 3");
 		
-		//listMessages.setModel(roomMessages);
+		listMessages.setModel(roomMessages);
 		int lastIndex = roomMessages.getSize() - 1;
 		listMessages.ensureIndexIsVisible(lastIndex);
 		
@@ -528,15 +533,17 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		catch (Exception e) {
 			
 		}
-		roomUsers.addElement(userName);
-		roomUsers.addElement("Other Users");
-		roomUsers.addElement("From Room " + roomID);
+		Hashtable<String,User> hashRoomUsers = clientInterface.getRooms().get(roomID).getUsers();
+		for (int position = 0; position<=hashRoomUsers.size();position++) {
+			roomUsers.addElement(hashRoomUsers.keySet().toString());
+		}
 		listUsers.setModel(roomUsers);
 	}
 	
 	public void showAllRooms () {
-		Hashtable<Integer, Room> rooms = clientInterface.getRooms();
-		for (int position = 0; position<rooms.size();position++) {
+		System.out.println("try to get rooms");
+		rooms = clientInterface.getRooms();
+		for (int position = 0; position<=rooms.size();position++) {
 			String name = rooms.get(position).getName();
 			userRooms.add(position, name);
 		}

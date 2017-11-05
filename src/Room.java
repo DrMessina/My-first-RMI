@@ -19,6 +19,10 @@ public class Room implements Serializable {
 		lastCheck.put(u.getNom(), 0);
 	}
 
+	public Hashtable<String, User> getUsers() {
+		return users;
+	}
+
 	//second constructeur
 	public Room(User u, Msg m, int id) {
 		this.users.put(u.getNom(), u);

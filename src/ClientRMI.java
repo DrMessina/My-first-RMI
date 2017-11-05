@@ -43,6 +43,7 @@ public static void main(String[] argv) {
 	}
 
 public void login(String userName) {
+			//manque ajout serveur
         		user = new User(userName);
         		System.out.println(userName);
 }
@@ -52,9 +53,10 @@ public void addRoom(User user, int id, String name) {
 	
 	try {
 		serverInterface.addRoom(user, id, name);
+		System.out.println("add room " + user.getNom());
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
-		System.out.println(user.getNom());
+		System.out.println("didn't add room" + user.getNom());
 		e.printStackTrace();
 	}
 }

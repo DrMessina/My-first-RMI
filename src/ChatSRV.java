@@ -13,17 +13,13 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 		return rooms;
 	}
 
-	public void setRooms(Hashtable<Integer, Room> rooms) throws RemoteException {
-		this.rooms = rooms;
-	}
-
 	public ChatSRV() throws RemoteException{}
 
 	@Override
 	public void addRoom(User u,int id, String name) throws RemoteException {
-		System.out.println(name);
 		Room r = new Room(u,id,name);
 		rooms.put(id, r);
+		System.out.println(name);
 	}
 
 	@Override
@@ -36,7 +32,6 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 		quitRoom(oldRoomId, u.toString(), positionMsg);
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
-			
 		}
 	}
 
@@ -71,5 +66,6 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	public void quitRoom(int roomId, String nom, int positionMsg) throws RemoteException {
 		rooms.get(roomId).setLastCheck(nom, positionMsg);
 	}
+
 
 }
