@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public interface ClientInterface {
-	public void addRoom(User user, int id, String name);
+	public void addRoom(User user, int id, String roomName);
 	public User login(String userName);
 	public User getUser();
 	public void setUser(User user);
@@ -11,4 +11,5 @@ public interface ClientInterface {
 	public ArrayList<String> getMsg(int position, int roomId);
 	public void sendMsg(Msg m, int roomId);
 	public void update ();
+	public boolean addGlobalUser(String user);
 }

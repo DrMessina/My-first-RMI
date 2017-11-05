@@ -18,18 +18,32 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	public ChatSRV() throws RemoteException{
 		rooms = new Hashtable<>();
 		allUsers = new Hashtable<>();
+		rooms.clear();
+		allUsers.clear();
+		System.out.println(allUsers.toString());
 	}
 
 	
-	public void addRoom(User u,int id, String name) throws RemoteException {
-		Room r = new Room(u,id,name);
+	public void addRoom(User u,int id, String roomName) throws RemoteException {
+		Room r = new Room(u,id,roomName);
 		rooms.put(id, r);
-		System.out.println(name);
+		System.out.println(roomName);
+		System.out.println(allUsers.toString());
 	}
 
 	@Override
-	public void addGlobalUser(User u) throws RemoteException {
-		allUsers.put(u.getNom(), u);
+	public boolean addGlobalUser(User user, String u) throws RemoteException {
+		if (allUsers.isEmpty()) {
+			allUsers.put(u, user);
+			return true;
+		} else if (!allUsers.containsKey(u)) {
+			allUsers.put(u, user);
+			System.out.println("Added");
+			return true;
+		} 
+		System.out.println("Not added");
+		System.out.println(allUsers.toString());
+		return false;
 	}
 
 	/*@Override
@@ -99,7 +113,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	@Override
 	public void removeUser(User u) throws RemoteException {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -112,6 +126,11 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException {
 		
 	}*/
+	
+	public void shutdown () {
+		rooms.clear();
+		allUsers.clear();
+	}
 
 	
 

@@ -59,6 +59,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private ClientInterface clientInterface;
 	
 	private User user;
+	private boolean userAdded;
 	private String userName;
 	private int lastIndex;
 	
@@ -416,29 +417,33 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			} else {
 				userName = new String(inputText);
 				
-				//envoyer le login au serveur
-				//recevoir l'erreur si login déjà existant
-				boolean login_exists = false;
 				
-				//si login existe, lancer le chat, sinon afficher le message d'erreur
-				if (login_exists == false) {
-					
-					javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			            public void run() {
-			            		user = clientInterface.login(userName);
-			            }
-					});
-				        	//creation niveau serveur
-					createChatInterface(userName);
-				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			            public void run() {
-			            		clientInterface.update ();
-			            }
-					});
-				} else {
-					lblErrorMessage.setText("Nickname already taken!");
-				}
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		            public void run() {
+		            		userAdded = clientInterface.addGlobalUser(userName);
+		            		System.out.println(userAdded);
+		            		//si login existe, lancer le chat, sinon afficher le message d'erreur
+		    				if (userAdded == true) {
+		    					
+		    					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		    			            public void run() {
+		    			            		user = clientInterface.login(userName);
+		    			            }
+		    					});
+		    				        	//creation niveau serveur
+		    					createChatInterface(userName);
+		    				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+		    				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		    			            public void run() {
+		    			            		clientInterface.update ();
+		    			            }
+		    					});
+		    				} else {
+		    					lblErrorMessage.setText("Nickname already taken!");
+		    				}
+		            }
+				});
+				
 			}	
 		} else if (((JButton) evt.getSource()).getActionCommand().equals("new_user")) {
 			createInputInterface("add_user");
@@ -489,7 +494,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    	    				System.out.println(userName);
 		    	    				System.out.println(lastIndex);
 		    	    				
-		    	    				user = clientInterface.getUser();
+		    	    				//user = clientInterface.getUser();
 		    	    				clientInterface.addRoom(user,lastIndex,inputText);
 		    	    				
 		    	    				chatChange(lastIndex);
@@ -515,11 +520,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		        			Msg m = new Msg(user, message, lastIndex);
 	
 		        			clientInterface.sendMsg(m, actualRoom.gtIDsalon());
-			/*
-			 * METHODE SERVEUR
-			 * envoi au serveur du message à envoyer aux autres utilisareurs
-			*/
-		        			
+						
 		        			
 		        		}
 		}
@@ -539,8 +540,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			});
 		}
 		
-		
-		//cron appel serveur
 		
 	}
 	
@@ -588,7 +587,6 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void showAllRooms () {
-		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             		System.out.println("try to get rooms");
@@ -608,6 +606,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		});   
 	}
 	
+	//Erreur si le serveur n'est pas allumé
 	public void setServerError() {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -620,7 +619,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		});
 	}
 	
-	
+	//mise à jour de tous les champs géré par un Timer dans le client
 	public void update() {
 		userRooms.clear();
 		showAllRooms();

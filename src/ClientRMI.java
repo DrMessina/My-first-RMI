@@ -48,21 +48,20 @@ public static void main(String[] argv) {
 	}
 
 public User login(String userName) {
-			//manque ajout serveur
         		user = new User(userName);
         		System.out.println(userName + " logged in");
         		return user;
 }
 
 
-public void addRoom(User user, int id, String name) {
+public void addRoom(User user, int id, String roomName) {
 	
 	try {
-		serverInterface.addRoom(user, id, name);
-		System.out.println("add room " + name);
+		serverInterface.addRoom(user, id, roomName);
+		System.out.println("add room " + roomName);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
-		System.out.println("didn't add room" + name);
+		System.out.println("didn't add room" + roomName);
 		e.printStackTrace();
 	}
 }
@@ -128,6 +127,20 @@ ActionListener update = new ActionListener() {
 		chatGUIInterface.update();
 	}
 };
+
+public boolean addGlobalUser(String u) {
+	
+	try {
+		user = new User (u);
+		if (serverInterface.addGlobalUser(user, u)) {
+			return true;
+		}
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return false;
+}
 
 	/*public Chat_client() {
 		
