@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="public" author="true" classpath="jgoodies-forms-1.8.0.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.8" sourcefiles="src/ClientRMI.java" sourcepath="src" splitindex="true" use="true" version="true"/>
+        <javadoc access="public" author="true" classpath="jgoodies-forms-1.8.0.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.8" sourcefiles="src/User.java,src/InterfaceChatSRV.java,src/Chat_GUI.java,src/Main.java,src/Msg.java,src/GUIInterface.java,src/ClientInterface.java,src/ServerRMI.java,src/ChatSRV.java,src/ClientRMI.java,src/Room.java" sourcepath="src" splitindex="true" use="true" version="true"/>
     </target>
 </project>
