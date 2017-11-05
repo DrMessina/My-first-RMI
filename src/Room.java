@@ -21,12 +21,23 @@ public class Room {
 		lastCheck.put(u.getNom(), 0);
 	}
 	//on obtiens la derniere interaction
-	public int getLastCheck(String nom) {
+	public int getLastUserCheck(String nom) {
 		return lastCheck.get(nom);
 	}
 	//definir la derniere interaction
-	public void setLastCheck(String nom,int positionMsg) {
+	public void setLastUserCheck(String nom,int positionMsg) {
 		this.lastCheck.put(nom, positionMsg);
+	}
+	
+	public Hashtable<Integer, Msg> getMessages() {
+		return messages;
+	}
+	public Hashtable<String, Integer> getLastCheck() {
+		return lastCheck;
+	}
+	
+	public void setLastCheck(Hashtable<String, Integer> lastCheck) {
+		this.lastCheck = lastCheck;
 	}
 	//retourne  si oui ou non la room est privée
 	public boolean getIsPrivate() {
