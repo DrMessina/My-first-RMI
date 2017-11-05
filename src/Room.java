@@ -16,6 +16,7 @@ public class Room implements Serializable {
 		this.users.put(u.getNom(), u);
 		this.IDSalon=id;
 		this.name = name;
+		this.messages.put(0, new Msg(null, "--- Welcome in room " + name + " ---",0));
 		lastCheck.put(u.getNom(), 0);
 	}
 
@@ -45,7 +46,6 @@ public class Room implements Serializable {
 	public void setLastUserCheck(String nom,int positionMsg) {
 		this.lastCheck.put(nom, positionMsg);
 	}
-<<<<<<< HEAD
 	
 	public Hashtable<Integer, Msg> getMessages() {
 		return messages;
@@ -57,10 +57,8 @@ public class Room implements Serializable {
 	public void setLastCheck(Hashtable<String, Integer> lastCheck) {
 		this.lastCheck = lastCheck;
 	}
-	//retourne  si oui ou non la room est privée
-=======
 	//retourne  si oui ou non la room est privï¿½e
->>>>>>> 212dc4d03779d0d696d677299ec517997f267742
+	//retourne  si oui ou non la room est privï¿½e
 	public boolean getIsPrivate() {
 		return isPrivate;
 	}

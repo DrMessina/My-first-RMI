@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public interface ClientInterface {
@@ -7,5 +8,7 @@ public interface ClientInterface {
 	public void setUser(User user);
 	public Hashtable<Integer, Room> getRooms();
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg);
-	public Msg getMsg();
+	public ArrayList<String> getMsg(int position, int roomId);
+	public void sendMsg(Msg m, int roomId);
+	public void update ();
 }
