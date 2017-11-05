@@ -9,8 +9,7 @@ public class ServerRMI implements Serializable {
 	
 	/**
 	 * Classe de demarrage du server RMI
-	 * @author Landry &  Hendrik
-	 * @version 1
+	 * @author amata
 	 */
 	private static final long serialVersionUID = 6479220762872517522L;
 	
