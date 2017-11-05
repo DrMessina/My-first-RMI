@@ -8,10 +8,18 @@ public class ServerRMI implements Serializable {
 	
 	
 	/**
-	 * 
+	 * Classe de demarrage du server RMI
+	 * @author Landry &  Hendrik
+	 * @version 1
 	 */
 	private static final long serialVersionUID = 6479220762872517522L;
-
+	
+	/**
+	 * on instancie la classe distante,
+	 * on lance le registre RMI
+	 * 
+	 * @param argv
+	 */
 	public static void main(String[] argv) {
 		try {			
 			//lancement du registre de nom RMI(ne se fait qu'une seule fois
