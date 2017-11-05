@@ -7,12 +7,12 @@ import java.io.Serializable;
  */
 public class User implements Serializable{
 	/**
-	 * Version de serialisation de la classe.</br>
+	 * Version de serialisation de la classe.<br>
 	 * Il est autogeneré et unique. 
 	 */
 	private static final long serialVersionUID = 133828474699154622L;
 	/**
-	 * Nom de l'utilisateur.</br>
+	 * Nom de l'utilisateur.<br>
 	 * 
 	 * @see User#setNom(String)
 	 * @see User#getNom()
@@ -28,7 +28,7 @@ public class User implements Serializable{
 	 */
 	public User(String nom) {	this.nom=nom;}
 	/**
-	 * met à jour le nom de l'utilisateur.</br>
+	 * met à jour le nom de l'utilisateur.<br>
 	 * 
 	 * @param nom
 	 * 		Le nom de l'utilisateur.
