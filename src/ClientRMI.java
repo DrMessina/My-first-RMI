@@ -24,7 +24,7 @@ public ClientRMI() throws RemoteException{
         	chatGUIInterface = new Chat_GUI(this);
         	//updater = new Timer (3000, chatGUIInterface);
         	try {
-				 serverInterface = (InterfaceChatSRV) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI");
+				serverInterface = (InterfaceChatSRV) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI");
 			} catch (MalformedURLException | RemoteException | UnknownHostException | NotBoundException e) {
 				chatGUIInterface.setServerError();
 				e.printStackTrace();
@@ -91,6 +91,16 @@ public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) {
 		System.out.println("Didn't got into room");
 		e.printStackTrace();
 	}
+}
+
+public Msg getMsg() {
+	try {
+		return serverInterface.getMsg();
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
 }
 
 

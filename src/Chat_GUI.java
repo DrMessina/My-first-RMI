@@ -534,6 +534,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		// Appel serveur pour avoir la bonne conversation avec l'id de la room
 		actualRoom = clientInterface.getRooms().get(roomID);
 		// ajout conversation en cours
+		
+		
+		
 		System.out.println("Switching room" + roomID);
 		roomMessages.addElement("Room " + roomID);
 		roomMessages.addElement("message 1");
