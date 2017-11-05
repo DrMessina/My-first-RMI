@@ -3,19 +3,28 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
+public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
-	private static final long serialVersionUID = 3716834582298139732L;
+	private static final long serialVersionUID = 7699384301633005058L;
 	
-	Hashtable<Integer, Room> rooms = new Hashtable<>();
-	Hashtable<String, User> allUsers = new Hashtable<>();
+	private Hashtable<Integer, Room> rooms;
+	private Hashtable<String, User> allUsers;
 	
-	public ChatSRV() throws RemoteException{}
+	
+	public Hashtable<Integer, Room> getRooms() throws RemoteException {
+		return rooms;
+	}
+
+	public ChatSRV() throws RemoteException{
+		rooms = new Hashtable<>();
+		allUsers = new Hashtable<>();
+	}
 
 	@Override
-	public void addRoom(User u,int id) throws RemoteException {
-		Room r = new Room(u,id);
+	public void addRoom(User u,int id, String name) throws RemoteException {
+		Room r = new Room(u,id,name);
 		rooms.put(id, r);
+		System.out.println(name);
 	}
 
 	@Override
@@ -24,6 +33,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void changeRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
 		quitRoom(oldRoomId, u.getNom(), positionMsg);
 		if(this.rooms.containsKey(roomId)) {
@@ -35,6 +45,19 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 				rooms.get(roomId).setLastUserCheck(u.getNom(), (lastCheck.size()-1));
 				getMsg(rooms.get(roomId).getLastUserCheck(u.getNom()),roomId);
 			}
+=======
+	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
+		System.out.println("On server");
+		System.out.println(roomId);
+		System.out.println(oldRoomId);
+		if (oldRoomId != roomId) {
+			quitRoom(oldRoomId, u.getNom(), positionMsg);
+			System.out.println(u.getNom());
+		}
+		if(this.rooms.containsKey(roomId)) {
+			rooms.get(roomId).addUser(u);
+			System.out.println("Added user server side");
+>>>>>>> 212dc4d03779d0d696d677299ec517997f267742
 		}
 	}
 
@@ -81,5 +104,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException {
 		
 	}
+
+
 
 }
