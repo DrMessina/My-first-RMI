@@ -2,7 +2,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
+/**
+ * Classe distante
+ * @author Landry & Hendrik
+ */
 public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	private static final long serialVersionUID = 7699384301633005058L;
