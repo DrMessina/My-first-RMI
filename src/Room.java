@@ -57,13 +57,7 @@ public class Room implements Serializable {
 	public void setLastCheck(Hashtable<String, Integer> lastCheck) {
 		this.lastCheck = lastCheck;
 	}
-<<<<<<< HEAD
 	//retourne  si oui ou non la room est privï¿½e
-	//retourne  si oui ou non la room est privï¿½e
-=======
-	
-	//retourne  si oui ou non la room est privée
->>>>>>> ff5f60718a041c3a0351f161e02226332821aa9f
 	public boolean getIsPrivate() {
 		return isPrivate;
 	}

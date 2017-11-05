@@ -32,11 +32,11 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		allUsers.put(u.getNom(), u);
 	}
 
-	@Override
-<<<<<<< HEAD
+	/*@Override
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
 		quitRoom(oldRoomId, u.getNom(), positionMsg);
-=======
+	}*/
+
 	public void changeRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
 		if (oldRoomId != roomId) {
 			quitRoom(oldRoomId, u.getNom(), positionMsg);
@@ -44,7 +44,6 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		}else{
 			return;
 		}
->>>>>>> ff5f60718a041c3a0351f161e02226332821aa9f
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 			Hashtable<String, Integer>lastCheck =rooms.get(roomId).getLastCheck();
@@ -54,11 +53,10 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 				rooms.get(roomId).setLastUserCheck(u.getNom(), (lastCheck.size()-1));
 				getMsg(rooms.get(roomId).getLastUserCheck(u.getNom()),roomId);
 			}
-<<<<<<< HEAD
 		}
 	}
 			
-	/*public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
+	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
 		System.out.println("On server");
 		System.out.println(roomId);
 		System.out.println(oldRoomId);
@@ -69,10 +67,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 			System.out.println("Added user server side");
-=======
->>>>>>> ff5f60718a041c3a0351f161e02226332821aa9f
 		}
-	}*/
+	}
 
 	@Override
 	public void sendMsg(Msg m, int roomId) throws RemoteException {
@@ -112,14 +108,11 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		rooms.get(roomId).setLastUserCheck(nom, positionMsg);
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
+	/*@Override
 	public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException {
 		
-	}
+	}*/
 
->>>>>>> ff5f60718a041c3a0351f161e02226332821aa9f
 	
 
 	
