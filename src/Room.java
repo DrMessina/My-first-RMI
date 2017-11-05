@@ -7,10 +7,15 @@ import java.util.Hashtable;
  */
 public class Room implements Serializable {
 	/**
-	 * 
-	 * @param
+	 * Version de serialisation de la classe.<br>
+	 * Il est autogeneré et unique.<br>
 	 */
 	private static final long serialVersionUID = 2833701869083276152L;
+	/**
+	 * liste contenant les utilisateurs liés au salon d discussion.<br>
+	 * 
+	 * @see Room#addUser(User)
+	 */
 	private Hashtable<String, User> users = new Hashtable<>();
 	private Hashtable<Integer, Msg> messages = new Hashtable<>();
 	private Hashtable<String, Integer> lastCheck = new Hashtable<>();
@@ -87,6 +92,9 @@ public class Room implements Serializable {
 	public void addUser(User u) {
 		System.out.println(u.getNom() + " added to room");
 		this.users.put(u.getNom(), u);
+	}
+	public void removeUser(User u) {
+		users.remove(u.getNom());
 	}
 	
 	
