@@ -26,7 +26,7 @@ public ClientRMI() throws RemoteException{
         	try {
 				 serverInterface = (InterfaceChatSRV) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI");
 			} catch (MalformedURLException | RemoteException | UnknownHostException | NotBoundException e) {
-				// TODO Auto-generated catch block
+				chatGUIInterface.setServerError();
 				e.printStackTrace();
 			}
 }
@@ -45,7 +45,7 @@ public static void main(String[] argv) {
 public void login(String userName) {
 			//manque ajout serveur
         		user = new User(userName);
-        		System.out.println(userName);
+        		System.out.println(userName + " logged in");
 }
 
 @Override
@@ -71,11 +71,11 @@ public void setUser(User user) {
 
 public Hashtable<Integer, Room> getRooms() {
 	try {
-		System.out.println("Rooms getted");
+		System.out.println("Rooms gotten");
 		return serverInterface.getRooms();
 	} catch (RemoteException e) {
 		e.printStackTrace();
-		System.out.println("Rooms not getted");
+		System.out.println("Rooms not gotten");
 		return null;
 	}
 	

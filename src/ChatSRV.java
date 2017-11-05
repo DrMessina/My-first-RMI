@@ -6,8 +6,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	private static final long serialVersionUID = 7699384301633005058L;
 	
-	Hashtable<Integer, Room> rooms = new Hashtable<>();
-	Hashtable<String, User> allUsers = new Hashtable<>();
+	private Hashtable<Integer, Room> rooms;
+	private Hashtable<String, User> allUsers;
 	
 	
 	public Hashtable<Integer, Room> getRooms() throws RemoteException {
@@ -15,7 +15,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	}
 
 	public ChatSRV() throws RemoteException{
-		
+		rooms = new Hashtable<>();
+		allUsers = new Hashtable<>();
 	}
 
 	@Override

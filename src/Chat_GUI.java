@@ -73,7 +73,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
 	public class MaxLengthTextDocument extends PlainDocument {
-	    //Store maximum characters permitted
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = -206705778340494747L;
+		//Store maximum characters permitted
 	    private int maxChars;
 	   
 	    
@@ -93,10 +97,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	public void componentResized(ComponentEvent evt) {
-        actualWidth = evt.getComponent().getWidth(); 
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+		actualWidth = evt.getComponent().getWidth(); 
         System.out.println(actualWidth);
         listMessages.setCellRenderer(new MyCellRenderer(actualWidth-100));
-    }
+            }
+		});
+	}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
@@ -117,9 +125,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	}
 	
 	//by Andrew on StackOverflow (https://stackoverflow.com/questions/7861724/is-there-a-word-wrap-property-for-jlabel/7861833#7861833)
-		@SuppressWarnings("serial")
 	class MyCellRenderer extends DefaultListCellRenderer {
-		   public static final String HTML_1 = "<html><body style='width: ";
+		   /**
+		 * 
+		 */
+		private static final long serialVersionUID = -7543529318885494620L;
+		public static final String HTML_1 = "<html><body style='width: ";
 		   public static final String HTML_2 = "px'>";
 		   public static final String HTML_3 = "</html>";
 		   private int width;
@@ -144,6 +155,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
         roomMessages = new DefaultListModel<>();
         roomUsers = new DefaultListModel<>();
 		
+        
         showAllRooms ();
             		
 		frame = new JFrame();
@@ -181,7 +193,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbl_rooms_panel.rowWeights = new double[]{1.0, 0.0};
 		rooms_panel.setLayout(gbl_rooms_panel);
 		
-		listRooms = new JList<String>(userRooms);
+		listRooms = new JList<String>();
 		JScrollPane scrollRooms = new JScrollPane(listRooms);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -252,9 +264,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbl_chat_panel.columnWeights = new double[]{1.0, 0.0};
 		gbl_chat_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		chat_panel.setLayout(gbl_chat_panel);
-		//chat_panel.addComponentListener(this);
+		chat_panel.addComponentListener(this);
 		
-		listMessages = new JList<String>(roomMessages);
+		listMessages = new JList<String>();
 		JScrollPane scrollMessages = new JScrollPane(listMessages);
 		GridBagConstraints gbc_scrollMessages = new GridBagConstraints();
 		gbc_scrollMessages.gridwidth = 2;
@@ -408,14 +420,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				//si login existe, lancer le chat, sinon afficher le message d'erreur
 				if (login_exists == false) {
 					
-					createChatInterface(userName);
 					javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			            public void run() {
 			            		clientInterface.login(userName);
 			            }
 					});
 				        	//creation niveau serveur
-				        	inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+					createChatInterface(userName);
+				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
 				} else {
 					lblErrorMessage.setText("Nickname already taken!");
 				}
@@ -536,29 +548,44 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			roomUsers.clear();
 		} 
 		catch (Exception e) {
-			
+			System.out.println("roomUsers cleared");
 		}
 		Hashtable<String,User> hashRoomUsers = clientInterface.getRooms().get(roomID).getUsers();
 		System.out.println(hashRoomUsers.size());
 		for (int position = 0; position<=hashRoomUsers.size();position++) {
+			System.out.println(hashRoomUsers.keySet().toString());
 			roomUsers.addElement(hashRoomUsers.keySet().toString());
 		}
 		listUsers.setModel(roomUsers);
 	}
 	
 	public void showAllRooms () {
-		System.out.println("try to get rooms");
+		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+            		System.out.println("try to get rooms");
             		rooms = clientInterface.getRooms();
             		if (!rooms.isEmpty()) {
             			for (int position = 0; position<=rooms.size();position++) {
                 			String name = rooms.get(position).getName();
                 			userRooms.add(position, name);
                 		}
+            			listRooms.setModel(userRooms);
             		}
             }
 		});   
+	}
+	
+	public void setServerError() {
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            		lblErrorMessage.setText("Server is not running");
+            		lblTitle.setVisible(false);
+            		separateInput.setVisible(false);
+            		btnSubmit.setVisible(false);
+            		inputframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+		});
 	}
 	
 	/*public void update() {
