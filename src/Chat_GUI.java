@@ -152,9 +152,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			}
 		
 	
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	public void createChatInterface(String nickname) {
 		
         userRooms = new DefaultListModel<>();
@@ -411,126 +409,128 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		System.err.println(((JButton) evt.getSource()).getActionCommand());
 		if (evt.getSource() == chckbxPrivate) {
-			//AbstractButton privateAbstractBtn = (AbstractButton) evt.getSource();
-	        //boolean selected = privateAbstractBtn.getModel().isSelected();
-	        isPrivate = chckbxPrivate.isSelected();
-		}
-		if (((JButton) evt.getSource()).getActionCommand().equals("login")) {
-			String inputText = separateInput.getText();
-			//vérifier si vide
-			if (inputText.equals("")) {
-				lblErrorMessage.setText("You can't login without a nickname!");
-			} else {
-				userName = new String(inputText);
-				
-				
-				javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		            public void run() {
-		            		userAdded = clientInterface.addGlobalUser(userName);
-		            		System.out.println(userAdded);
-		            		//si login existe, lancer le chat, sinon afficher le message d'erreur
-		    				if (userAdded == true) {
-		    					
-		    					javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		    			            public void run() {
-		    			            		user = clientInterface.login(userName);
-		    			            }
-		    					});
-		    				        	//creation niveau serveur
-		    					createChatInterface(userName);
-		    				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-		    				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		    			            public void run() {
-		    			            		clientInterface.update ();
-		    			            }
-		    					});
-		    				} else {
-		    					lblErrorMessage.setText("Nickname already taken!");
-		    				}
-		            }
-				});
-				
-			}	
-		} else if (((JButton) evt.getSource()).getActionCommand().equals("new_user")) {
-			createInputInterface("add_user");
-		} else if (((JButton) evt.getSource()).getActionCommand().equals("add_user")) {
-			String inputText = separateInput.getText();
-			//vérifier si vide
-			if (inputText.equals("")) {
-				lblErrorMessage.setText("No nickname has been mentionned!");
-			} else {
-				//envoyer le nom d'utilisateur au serveur
-				//recevoir l'erreur si le login est déjà existant
-				boolean user_exists = false;
-				
-				//si l'utilisateur existe, l'ajouter au salon, sinon afficher le message d'erreur
-				if (user_exists == true) {
-					//ajout à la room
+			AbstractButton privateAbstractBtn = (AbstractButton) evt.getSource();
+			isPrivate = privateAbstractBtn.getModel().isSelected();
+		} else {
+			//System.err.println(((JButton) evt.getSource()).getActionCommand());
+			if (((JButton) evt.getSource()).getActionCommand().equals("login")) {
+				String inputText = separateInput.getText();
+				//vérifier si vide
+				if (inputText.equals("")) {
+					lblErrorMessage.setText("You can't login without a nickname!");
 				} else {
-					lblErrorMessage.setText("The user has to be online!");
-				}
-			}	
-			// add user to room
-		} else if (((JButton) evt.getSource()).getActionCommand().equals("new_room")) {
-			createInputInterface("add_room");
-		} else if (((JButton) evt.getSource()).getActionCommand().equals("add_room")) {
-			String inputText = separateInput.getText();
-			//vérifier si vide
-			if (inputText.equals("")) {
-				lblErrorMessage.setText("No room name has been mentionned!");
-			} else {
-				//envoyer le nom du salon + utlisateur au serveur
-				//recevoir l'erreur si le salon est déjà existant
-				
-				if (userRooms.contains(inputText)) {
-					lblErrorMessage.setText("Room exists already!");
-				} else {
-					/*
-					 * METHODE SERVEUR
-					 * ajout de la room + utilisateur au server
-					*/
+					userName = new String(inputText);
 					
-		    				userRooms.addElement(inputText);
-		    				listRooms.setModel(userRooms);
-		    				
-		    				
-		    				lastIndex = userRooms.getSize() - 1;
-		    				javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		    	    			public void run() {
-		    	    				System.out.println(userName);
-		    	    				System.out.println(lastIndex);
-		    	    				
-		    	    				//user = clientInterface.getUser();
-		    	    				clientInterface.addRoom(user,lastIndex,inputText, isPrivate);
-		    	    				
-		    	    				chatChange(lastIndex);
-		    	    				listRooms.setSelectedIndex(lastIndex);
-		    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-		    	    			}
-		    	    		});
-		    		}
-			}	
-		} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
-		        		String inputText = messageInput.getText();
-		        		if (!inputText.equals("")) {
-		        			messageInput.setText("");
-		        			Date date = new Date(evt.getWhen());
-		        			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
-		        			String timeStamp = ft.format(date);
-		        			String message = "[" + timeStamp + "] " + userName + " : " + inputText ;
-		        			roomMessages.addElement(message);
-		        			listMessages.setModel(roomMessages);
-		        			int lastIndex = roomMessages.getSize() - 1;
-		        			listMessages.ensureIndexIsVisible(lastIndex);
-		        			
-		        			Msg m = new Msg(user, message, lastIndex);
-	
-		        			clientInterface.sendMsg(m, actualRoom.gtIDsalon());
+					
+					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			            public void run() {
+			            		userAdded = clientInterface.addGlobalUser(userName);
+			            		System.out.println(userAdded);
+			            		//si login existe, lancer le chat, sinon afficher le message d'erreur
+			    				if (userAdded == true) {
+			    					
+			    					javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			    			            public void run() {
+			    			            		user = clientInterface.login(userName);
+			    			            }
+			    					});
+			    				        	//creation niveau serveur
+			    					createChatInterface(userName);
+			    				    inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+			    				    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			    			            public void run() {
+			    			            		//clientInterface.update ();
+			    			            }
+			    					});
+			    				} else {
+			    					lblErrorMessage.setText("Nickname already taken!");
+			    				}
+			            }
+					});
+					
+				}	
+			} else if (((JButton) evt.getSource()).getActionCommand().equals("new_user")) {
+				createInputInterface("add_user");
+			} else if (((JButton) evt.getSource()).getActionCommand().equals("add_user")) {
+				String inputText = separateInput.getText();
+				//vérifier si vide
+				if (inputText.equals("")) {
+					lblErrorMessage.setText("No nickname has been mentionned!");
+				} else {
+					//envoyer le nom d'utilisateur au serveur
+					//recevoir l'erreur si le login est déjà existant
+					boolean user_exists = false;
+					
+					//si l'utilisateur existe, l'ajouter au salon, sinon afficher le message d'erreur
+					if (user_exists == true) {
+						//ajout à la room
+					} else {
+						lblErrorMessage.setText("The user has to be online!");
+					}
+				}	
+				// add user to room
+			} else if (((JButton) evt.getSource()).getActionCommand().equals("new_room")) {
+				createInputInterface("add_room");
+			} else if (((JButton) evt.getSource()).getActionCommand().equals("add_room")) {
+				String inputText = separateInput.getText();
+				//vérifier si vide
+				if (inputText.equals("")) {
+					lblErrorMessage.setText("No room name has been mentionned!");
+				} else {
+					//envoyer le nom du salon + utlisateur au serveur
+					//recevoir l'erreur si le salon est déjà existant
+					
+					if (userRooms.contains(inputText)) {
+						lblErrorMessage.setText("Room exists already!");
+					} else {
+						/*
+						 * METHODE SERVEUR
+						 * ajout de la room + utilisateur au server
+						*/
 						
-		        			
-		        		}
+							
+			    				userRooms.addElement(inputText);
+			    				listRooms.setModel(userRooms);
+			    				
+			    				
+			    				lastIndex = userRooms.getSize() - 1;
+			    				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			    	    			public void run() {
+			    	    				System.out.println(userName);
+			    	    				System.out.println(lastIndex);
+			    	    				
+			    	    				//user = clientInterface.getUser();
+			    	    				System.out.println("private is" + isPrivate);
+			    	    				clientInterface.addRoom(user,lastIndex,inputText, isPrivate);
+			    	    				
+			    	    				chatChange(lastIndex);
+			    	    				listRooms.setSelectedIndex(lastIndex);
+			    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
+			    	    			}
+			    	    		});
+			    		}
+				}	
+			} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
+			        		String inputText = messageInput.getText();
+			        		if (!inputText.equals("")) {
+			        			messageInput.setText("");
+			        			Date date = new Date(evt.getWhen());
+			        			SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss");
+			        			String timeStamp = ft.format(date);
+			        			String message = "[" + timeStamp + "] " + userName + " : " + inputText ;
+			        			roomMessages.addElement(message);
+			        			listMessages.setModel(roomMessages);
+			        			int lastIndex = roomMessages.getSize() - 1;
+			        			listMessages.ensureIndexIsVisible(lastIndex);
+			        			
+			        			Msg m = new Msg(user, message, lastIndex);
+		
+			        			clientInterface.sendMsg(m, actualRoom.gtIDsalon());
+							
+			        			
+			        		}
+			}
 		}
 	}
 	
@@ -602,10 +602,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
             		System.out.println("Rooms in GUI");
             		if (!rooms.isEmpty()) {
             			for (int position = 0; position<rooms.size();position++) {
-            				System.out.println(position);
-						String name = rooms.get(position).getName();
-						System.out.println(name);
-						userRooms.add(position, name);
+            				String roomName = null;
+            				boolean privateRoom = rooms.get(position).getIsPrivate();
+            				if (privateRoom) {
+            					roomName = "[Private] " + rooms.get(position).getName();
+            				} else {
+            					roomName = rooms.get(position).getName();
+            				}
+						userRooms.add(position, roomName);
                 		}
             			listRooms.setModel(userRooms);
             			System.out.println("Model set");
