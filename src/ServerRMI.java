@@ -5,6 +5,7 @@ import java.rmi.registry.LocateRegistry;
 
 public class ServerRMI implements Serializable {
 	
+	
 	/**
 	 * 
 	 */
@@ -19,6 +20,7 @@ public class ServerRMI implements Serializable {
 			//enregistrement dans le registre de noms RMI
 			Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI", chatSRV);
 			System.out.println("server started");
+		
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.err.println("server failed!");

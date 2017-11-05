@@ -2,18 +2,21 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 
-public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
+public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	private static final long serialVersionUID = 7699384301633005058L;
 	
 	Hashtable<Integer, Room> rooms = new Hashtable<>();
 	Hashtable<String, User> allUsers = new Hashtable<>();
 	
+	
 	public Hashtable<Integer, Room> getRooms() throws RemoteException {
 		return rooms;
 	}
 
-	public ChatSRV() throws RemoteException{}
+	public ChatSRV() throws RemoteException{
+		
+	}
 
 	@Override
 	public void addRoom(User u,int id, String name) throws RemoteException {
@@ -29,7 +32,8 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 
 	@Override
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
-		quitRoom(oldRoomId, u.toString(), positionMsg);
+		quitRoom(oldRoomId, u.getNom(), positionMsg);
+		System.out.println(u.getNom());
 		if(this.rooms.containsKey(roomId)) {
 			rooms.get(roomId).addUser(u);
 		}
@@ -66,6 +70,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV {
 	public void quitRoom(int roomId, String nom, int positionMsg) throws RemoteException {
 		rooms.get(roomId).setLastCheck(nom, positionMsg);
 	}
+
 
 
 }

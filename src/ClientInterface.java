@@ -6,4 +6,5 @@ public interface ClientInterface {
 	public User getUser();
 	public void setUser(User user);
 	public Hashtable<Integer, Room> getRooms();
+	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg);
 }

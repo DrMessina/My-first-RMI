@@ -81,6 +81,17 @@ public Hashtable<Integer, Room> getRooms() {
 	
 }
 
+@Override
+public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) {
+	try {
+		serverInterface.getIntoRoom(roomId, oldRoomId, u, positionMsg);
+		System.out.println("Got into room " + roomId);
+	} catch (RemoteException e) {
+		System.out.println("Didn't got into room");
+		e.printStackTrace();
+	}
+}
+
 
 
 	/*public Chat_client() {

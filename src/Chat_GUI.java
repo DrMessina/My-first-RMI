@@ -144,11 +144,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
         roomMessages = new DefaultListModel<>();
         roomUsers = new DefaultListModel<>();
 		
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-            		showAllRooms ();
-            }
-        });
+        showAllRooms ();
+            		
 		frame = new JFrame();
 		frame.setTitle("RMI Chat for " + nickname);
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -411,10 +408,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				//si login existe, lancer le chat, sinon afficher le message d'erreur
 				if (login_exists == false) {
 					
+					createChatInterface(userName);
 					javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			            public void run() {
-			            		
-			            		createChatInterface(userName);
 			            		clientInterface.login(userName);
 			            }
 					});
@@ -468,17 +464,18 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		    				
 		    				
 		    				lastIndex = userRooms.getSize() - 1;
-		    				/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		    	    			public void run() {*/
+		    				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		    	    			public void run() {
 		    	    				System.out.println(userName);
 		    	    				System.out.println(lastIndex);
+		    	    				
 		    	    				user = clientInterface.getUser();
 		    	    				clientInterface.addRoom(user,lastIndex,inputText);
 		    	    				chatChange(lastIndex);
 		    	    				listRooms.setSelectedIndex(lastIndex);
 		    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-		    	    			/*}
-		    	    		});*/
+		    	    			}
+		    	    		});
 				}
 			}	
 		} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
@@ -504,8 +501,16 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void valueChanged(ListSelectionEvent evt) {
 		if (evt.getValueIsAdjusting() == true) {
-			int roomID = listRooms.getSelectedIndex();
-			chatChange(roomID);
+			int oldRoomID = evt.getFirstIndex();
+			int roomID = evt.getLastIndex();
+			System.out.println("Change from Room " + oldRoomID + " to Room " + roomID );
+			
+			clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            		chatChange(roomID);
+	            }
+			});
 		}
 		
 		
@@ -534,6 +539,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			
 		}
 		Hashtable<String,User> hashRoomUsers = clientInterface.getRooms().get(roomID).getUsers();
+		System.out.println(hashRoomUsers.size());
 		for (int position = 0; position<=hashRoomUsers.size();position++) {
 			roomUsers.addElement(hashRoomUsers.keySet().toString());
 		}
@@ -542,11 +548,17 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void showAllRooms () {
 		System.out.println("try to get rooms");
-		rooms = clientInterface.getRooms();
-		for (int position = 0; position<=rooms.size();position++) {
-			String name = rooms.get(position).getName();
-			userRooms.add(position, name);
-		}
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            		rooms = clientInterface.getRooms();
+            		if (!rooms.isEmpty()) {
+            			for (int position = 0; position<=rooms.size();position++) {
+                			String name = rooms.get(position).getName();
+                			userRooms.add(position, name);
+                		}
+            		}
+            }
+		});   
 	}
 	
 	/*public void update() {
