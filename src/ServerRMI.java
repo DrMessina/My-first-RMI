@@ -1,9 +1,16 @@
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 
-public class ServerRMI {
+public class ServerRMI implements Serializable {
 	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6479220762872517522L;
+
 	public static void main(String[] argv) {
 		try {			
 			//lancement du registre de nom RMI(ne se fait qu'une seule fois
@@ -13,6 +20,7 @@ public class ServerRMI {
 			//enregistrement dans le registre de noms RMI
 			Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI", chatSRV);
 			System.out.println("server started");
+		
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.err.println("server failed!");
