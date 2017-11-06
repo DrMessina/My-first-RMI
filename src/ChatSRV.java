@@ -20,7 +20,6 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		allUsers = new Hashtable<>();
 		rooms.clear();
 		allUsers.clear();
-		System.out.println(allUsers.toString());
 	}
 
 	
@@ -123,26 +122,22 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 	public void disconnect(User u) throws RemoteException {
 		allUsers.remove(u.getNom());
 		for (int i=0;i<rooms.size();i++) {
-			rooms.get(i).removeUser(u);
-			if (rooms.get(i).getUsers().isEmpty()) {
-				rooms.remove(i);
+			Hashtable<String, User> users=rooms.get(i).getUsers();
+			System.out.println(users.get(u.getNom()));
+			if(users.containsKey(u.getNom())) {
+				rooms.get(i).removeUser(u);
+				if(rooms.get(i).getIsPrivate()) {
+					if(rooms.get(i).getUsers().size()<1) {
+						rooms.remove(i);
+					}
+				}
 			}
 		}
-		
 	}
 
 	@Override
 	public void quitRoom(int roomId, String nom, int positionMsg) throws RemoteException {
 		rooms.get(roomId).setLastUserCheck(nom, positionMsg);
 	}
-
-	/*@Override
-	public void getIntoRoom(int roomId, User u, int positionMsg) throws RemoteException {
-		
-	}*/
-
-	
-
-	
 
 }

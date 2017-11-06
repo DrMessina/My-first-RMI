@@ -154,6 +154,7 @@ public boolean inviteUser(User userAllow,int roomId) {
 
 public void disconnect(User u) {
 	try {
+		//System.out.println("lolilol");
 		serverInterface.disconnect(u);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block

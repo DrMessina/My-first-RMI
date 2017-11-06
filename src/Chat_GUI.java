@@ -565,7 +565,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
-	            		//clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
+	            		clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
 	            		chatChange(roomID);
 	            }
 			});
@@ -721,13 +721,13 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	public void manageDisconnection () {
 		frame.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent evt){
-				javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		            public void run() {
+				//javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		          //  public void run() {
 		            		clientInterface.disconnect(user);
 		            		System.out.println("déconnection");
-		            		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		            }
-				});
+		            		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		            		System.exit(0);
+		           //}});
 			}
 		});
 	}

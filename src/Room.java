@@ -51,7 +51,13 @@ public class Room implements Serializable {
 	public Hashtable<String, User> getUsers() {
 		return users;
 	}
-
+	/**
+	 * met à jour la liste des users
+	 * @param users
+	 */
+	public void setUsers(Hashtable<String, User> users) {
+		this.users = users;
+	}
 	/**
 	 * second constructeur.
 	 * 
@@ -141,7 +147,7 @@ public class Room implements Serializable {
 		return isPrivate;
 	}
 	/**
-	 * met à jour si s-une room est privée ou non.
+	 * met à jour si une room est privée ou non.
 	 * @param isPrivate
 	 * 		boolean determinant si la romm est privée ou non.<br>
 	 */
@@ -171,7 +177,7 @@ public class Room implements Serializable {
 		this.messages.put(m.getPosition(), m);
 	}
 	/**
-	 * ajoute un ustilisateur dans la liste des utilisateurs du salon.
+	 * ajoute un utilisateur dans la liste des utilisateurs du salon.
 	 * @param u
 	 * 		utilisateur à ajouter dans le salon.
 	 */
@@ -185,8 +191,10 @@ public class Room implements Serializable {
 	 * 		utilisateur à retirer.
 	 */
 	public void removeUser(User u) {
+		System.out.println(users.size()+" hello");
 		users.remove(u.getNom());
 		lastCheck.remove(u.getNom());
+			System.out.println(users.size());
 	}
 	
 	
