@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import javax.swing.JLabel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
@@ -64,7 +66,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private Integer actualWidth;
 	
 	private ClientInterface clientInterface;
-	
+	private int actualTab;
 	private User user;
 	private boolean userAdded;
 	private String userName;
@@ -74,7 +76,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private Room actualRoom;
 	private int roomID;
 	private boolean isPrivate;
-	
+	/**
+	 * point d'entrÈ de l'interface.
+	 * @param clientInterface
+	 * 		permet d'appeler les methodes distantes.
+	 */
 	Chat_GUI (ClientInterface clientInterface){
 		this.clientInterface = clientInterface;
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -87,6 +93,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	// by MChaker on https://stackoverflow.com/questions/30027582/limit-the-number-of-characters-of-a-jtextfield
 	public class MaxLengthTextDocument extends PlainDocument {
 	    /**
+		 * determine la longueur du string ‡ ecrire dans le champs text.
 		 * 
 		 */
 		private static final long serialVersionUID = -206705778340494747L;
@@ -139,8 +146,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	//by Andrew on StackOverflow (https://stackoverflow.com/questions/7861724/is-there-a-word-wrap-property-for-jlabel/7861833#7861833)
 	class MyCellRenderer extends DefaultListCellRenderer {
-		   /**
-		 * 
+		/**
+		 * Version de serialisation de la classe.<br>
+		 * Il est autogenerÈ et unique. 
 		 */
 		private static final long serialVersionUID = -7543529318885494620L;
 		public static final String HTML_1 = "<html><body style='width: ";
@@ -159,7 +167,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			}
 		
 	
-	
+	/**
+	 * crÈe l'interfac de chat client.
+	 * @param nickname
+	 * 		pseudo utilisateur.
+	 */
 	public void createChatInterface(String nickname) {
 		
         userRooms = new DefaultListModel<>();
@@ -317,7 +329,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 	}
 	
-	
+	/**
+	 * crÈe l'interface de dialogue.
+	 * @param inputInterfaceType
+	 * 		nom de l'interface.
+	 */
 	public void createInputInterface(String inputInterfaceType) {
 		
 		//r√®gles pour editer l'affichage selon les 3 cas login, ajouter un utilisateur et cr√©er un salon.
@@ -414,9 +430,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 		
 	}
-	
-	
-	
+	/**
+	 * gestion des evenements.
+	 * @param evt
+	 * 		un evenement sur l'interface
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == chckbxPrivate) {
@@ -556,7 +574,12 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			}
 		}
 	}
-	
+	/**
+	 * changement de room sur l'interface.
+	 * @param evt
+	 * 		evenement sur l'interface.
+	 * 
+	 */
 	public void valueChanged(ListSelectionEvent evt) {
 		if (evt.getValueIsAdjusting() == true) {
 			roomID = listRooms.getSelectedIndex();
@@ -573,7 +596,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 		
 	}
-	
+	/**
+	 * chzangement de room v2.
+	 * @param roomID
+	 * 		id du salon
+	 */
 	public void chatChange (int roomID) {
 		System.out.println("change to " + roomID);
 		try {
@@ -649,7 +676,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		listUsers.setModel(roomUsers);
             
 	}
-	
+	/**
+	 * affiche toute les rooms qui on ÈtÈ crÈe sur le client.
+	 * 
+	 */
 	public void showAllRooms () {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -674,7 +704,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		});   
 	}
 	
-	//Erreur si le serveur n'est pas allum√©
+	/**
+	 * Erreur si le serveur n'est pas allumÈe.
+	 */
 	public void setServerError() {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -687,8 +719,11 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		});
 	}
 	
-	//mise √† jour de tous les champs g√©r√© par un Timer dans le client
+	/**
+	 * mise √† jour de tous les champs g√©r√© par un Timer dans le client
+	 */
 	public void update() {
+		int actualTab2 = stateChanged();
 		userRooms.clear();
 		showAllRooms();
 		try {
@@ -704,10 +739,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		} catch (Exception e){
 			System.out.println("Didn't update messages and users in rooms");
 		}
-		
+		user_rooms_tabbed.setSelectedIndex(actualTab2);		
 		System.out.println("I update");
 	}
-	
+	/**
+	 * autorise l'edition d'un msg.
+	 * @param allowed
+	 * 		boolean qui permet d'activet ou desactiver le champ texte.
+	 */
 	public void allowTextSubmit (boolean allowed) {
 		if (allowed) {
 			messageInput.setEnabled(true);
@@ -717,7 +756,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			btnSend.setEnabled(false);
 		}
 	}
-	
+	/**
+	 * gestion de la deconnexion.
+	 */
 	public void manageDisconnection () {
 		frame.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent evt){
@@ -730,6 +771,20 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		           //}});
 			}
 		});
+	}
+	/**
+	 * changment du mode d'affichage.
+	 * @return
+	 * 		un entier qui determin le mode d'affichage.
+	 */
+	public int stateChanged() {
+		user_rooms_tabbed.addChangeListener(new ChangeListener() {
+		    public void stateChanged(ChangeEvent evt) {
+		    actualTab = user_rooms_tabbed.getSelectedIndex();
+		    	System.out.println("Tab: " + user_rooms_tabbed.getSelectedIndex());
+		    }
+		});
+		return actualTab;
 	}
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {

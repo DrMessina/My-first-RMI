@@ -1,4 +1,9 @@
-
+/**
+ * interface client GUI
+ * 
+ * @author Landry & Hendrik
+ *
+ */
 
 public interface GUIInterface {
 
