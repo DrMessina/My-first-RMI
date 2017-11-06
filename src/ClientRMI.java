@@ -156,11 +156,13 @@ public void disconnect(User u) {
 	try {
 		//System.out.println("lolilol");
 		serverInterface.disconnect(u);
+		System.exit(0);
 	} catch (RemoteException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 }
+
 
 	/*public Chat_client() {
 		

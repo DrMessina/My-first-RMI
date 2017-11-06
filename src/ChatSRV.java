@@ -51,23 +51,30 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		quitRoom(oldRoomId, u.getNom(), positionMsg);
 	}*/
 
-	public void changeRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
+	public ArrayList<String> changeRoom(int roomId, int oldRoomId, User u) throws RemoteException {
 		if (oldRoomId != roomId) {
-			quitRoom(oldRoomId, u.getNom(), positionMsg);
+			if(this.rooms.containsKey(roomId)) {
+				Room actualRoom = rooms.get(roomId);
+				if (!actualRoom.getUsers().containsKey(u.getNom())) {
+					actualRoom.addUser(u);
+					actualRoom.setLastUserCheck(u.getNom(),0);
+					return getMsg(actualRoom.getLastUserCheck(u.getNom()),roomId);
+				} else {
+					return getMsg(actualRoom.getLastUserCheck(u.getNom()),roomId);
+				}
+				/*Hashtable<String, Integer>lastCheck =actualRoom.getLastCheck();
+				if(lastCheck.contains(u.getNom())) {
+					return getMsg(actualRoom.getLastUserCheck(u.getNom()),roomId);
+				}else{			
+					actualRoom.setLastUserCheck(u.getNom(), (lastCheck.size()-1));
+					return getMsg(actualRoom.getLastUserCheck(u.getNom()),roomId);
+				}*/
+			}
 			System.out.println(u.getNom());
 		}else{
-			return;
+			return null;
 		}
-		if(this.rooms.containsKey(roomId)) {
-			rooms.get(roomId).addUser(u);
-			Hashtable<String, Integer>lastCheck =rooms.get(roomId).getLastCheck();
-			if(lastCheck.contains(u.getNom())) {
-				getMsg(positionMsg,roomId);
-			}else{			
-				rooms.get(roomId).setLastUserCheck(u.getNom(), (lastCheck.size()-1));
-				getMsg(rooms.get(roomId).getLastUserCheck(u.getNom()),roomId);
-			}
-		}
+		return null;
 	}
 			
 	public void getIntoRoom(int roomId, int oldRoomId, User u, int positionMsg) throws RemoteException {
@@ -75,7 +82,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		System.out.println(roomId);
 		System.out.println(oldRoomId);
 		if (oldRoomId != roomId) {
-			quitRoom(oldRoomId, u.getNom(), positionMsg);
+			//quitRoom(oldRoomId, u.getNom(), positionMsg);
 			System.out.println(u.getNom());
 		}
 		if(this.rooms.containsKey(roomId)) {
@@ -89,6 +96,7 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 
 	@Override
 	public void sendMsg(Msg m, int roomId) throws RemoteException {
+		rooms.get(roomId).setLastUserCheck(m.getUser().getNom(), m.getPosition());
 		rooms.get(roomId).addMsg(m);
 	}
 	
@@ -124,6 +132,9 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 		for (int i=0;i<rooms.size();i++) {
 			Hashtable<String, User> users=rooms.get(i).getUsers();
 			System.out.println(users.get(u.getNom()));
+			if (users.isEmpty()) {
+				System.out.println("empty users");
+			}
 			if(users.containsKey(u.getNom())) {
 				rooms.get(i).removeUser(u);
 				if(rooms.get(i).getIsPrivate()) {
@@ -131,13 +142,17 @@ public class ChatSRV extends UnicastRemoteObject implements InterfaceChatSRV{
 						rooms.remove(i);
 					}
 				}
+			} else {
+				System.out.println("pas de nom");
 			}
 		}
 	}
 
-	@Override
+	/*@Override
 	public void quitRoom(int roomId, String nom, int positionMsg) throws RemoteException {
+		
 		rooms.get(roomId).setLastUserCheck(nom, positionMsg);
-	}
+		
+	}*/
 
 }

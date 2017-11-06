@@ -1,18 +1,18 @@
 import java.io.Serializable;
 import java.util.Hashtable;
 /** 
- * Classe qui permet de crée un salon de discussion.
+ * Classe qui permet de crï¿½e un salon de discussion.
  * 
  * @author Landry & Hendrik
  */
 public class Room implements Serializable {
 	/**
 	 * Version de serialisation de la classe.<br>
-	 * Il est autogeneré et unique.<br>
+	 * Il est autogenerï¿½ et unique.<br>
 	 */
 	private static final long serialVersionUID = 2833701869083276152L;
 	/**
-	 * liste contenant les utilisateurs liés au salon d discussion.<br>
+	 * liste contenant les utilisateurs liï¿½s au salon d discussion.<br>
 	 * 
 	 * @see Room#addUser(User)
 	 * @see Room#removeUser(User)
@@ -33,7 +33,7 @@ public class Room implements Serializable {
 	 * @param name
 	 * 		variable representant le nom du salon.<br>
 	 * @param isPrivate
-	 * 		variable determinant si oui ou non le salon est privé.<br>
+	 * 		variable determinant si oui ou non le salon est privï¿½.<br>
 	 */
 	public Room(User u,int id, String name, boolean isPrivate) {
 		this.users.put(u.getNom(), u);
@@ -46,13 +46,13 @@ public class Room implements Serializable {
 	/**
 	 * permet de recuperer la liste des utilisateur de la room.<br>
 	 * @return
-	 * 		retourn un tabl contenant la liste de utilisateur avec comme clé leur nom d'utilisateur.<br>
+	 * 		retourn un tabl contenant la liste de utilisateur avec comme clï¿½ leur nom d'utilisateur.<br>
 	 */
 	public Hashtable<String, User> getUsers() {
 		return users;
 	}
 	/**
-	 * met à jour la liste des users
+	 * met ï¿½ jour la liste des users
 	 * @param users
 	 */
 	public void setUsers(Hashtable<String, User> users) {
@@ -64,7 +64,7 @@ public class Room implements Serializable {
 	 * @param u
 	 * 		utilisateur de la room.
 	 * @param m
-	 * 		Message envoyé par l'utilisateur.
+	 * 		Message envoyï¿½ par l'utilisateur.
 	 * @param id
 	 * 		id representant le salon.
 	 */
@@ -83,7 +83,7 @@ public class Room implements Serializable {
 		return name;
 	}
 	/**
-	 * met à jour le nom d'un utilisateur de la room.
+	 * met ï¿½ jour le nom d'un utilisateur de la room.
 	 * @param name
 	 * 		nouveau nom de l'utilisateur.
 	 */
@@ -95,7 +95,7 @@ public class Room implements Serializable {
 	 * @param nom
 	 * 		nom de lutilisateur dont on doti renvoyer la position.
 	 * @return
-	 * 		un entier determinant la derniere fois où l'utilisateur à lu un mesage.
+	 * 		un entier determinant la derniere fois oï¿½ l'utilisateur ï¿½ lu un mesage.
 	 */
 	public int getLastUserCheck(String nom) {
 		return lastCheck.get(nom);
@@ -114,7 +114,7 @@ public class Room implements Serializable {
 	 * retourne toute la table des messages.
 	 * 
 	 * @return
-	 * 		retourne une hastable dont la clé est la possition du messages.
+	 * 		retourne une hastable dont la clï¿½ est la possition du messages.
 	 */
 	public Hashtable<Integer, Msg> getMessages() {
 		return messages;
@@ -137,19 +137,19 @@ public class Room implements Serializable {
 		this.lastCheck = lastCheck;
 	}
 	/**
-	 * retourne  si oui ou non la room est privé.
+	 * retourne  si oui ou non la room est privï¿½.
 	 * @return
 	 * 		retourne un boolean.<br>
-	 *		si true: la room est privée.<br>
+	 *		si true: la room est privï¿½e.<br>
 	 *		si false: la room est publique.<br>
 	 */
 	public boolean getIsPrivate() {
 		return isPrivate;
 	}
 	/**
-	 * met à jour si une room est privée ou non.
+	 * met ï¿½ jour si une room est privï¿½e ou non.
 	 * @param isPrivate
-	 * 		boolean determinant si la romm est privée ou non.<br>
+	 * 		boolean determinant si la romm est privï¿½e ou non.<br>
 	 */
 	public void setPrivate(boolean isPrivate) {
 		this.isPrivate = isPrivate;
@@ -171,7 +171,7 @@ public class Room implements Serializable {
 	/**
 	 * ajoute un message dans la banque de messages de la room
 	 * @param m
-	 * 		message à ajouter dans la banque de messages.
+	 * 		message ï¿½ ajouter dans la banque de messages.
 	 */
 	public void addMsg(Msg m) { 
 		this.messages.put(m.getPosition(), m);
@@ -179,7 +179,7 @@ public class Room implements Serializable {
 	/**
 	 * ajoute un utilisateur dans la liste des utilisateurs du salon.
 	 * @param u
-	 * 		utilisateur à ajouter dans le salon.
+	 * 		utilisateur ï¿½ ajouter dans le salon.
 	 */
 	public void addUser(User u) {
 		System.out.println(u.getNom() + " added to room");
@@ -188,7 +188,7 @@ public class Room implements Serializable {
 	/**
 	 * retire un utilisateur du salon.
 	 * @param u
-	 * 		utilisateur à retirer.
+	 * 		utilisateur ï¿½ retirer.
 	 */
 	public void removeUser(User u) {
 		System.out.println(users.size()+" hello");
@@ -196,6 +196,7 @@ public class Room implements Serializable {
 		lastCheck.remove(u.getNom());
 			System.out.println(users.size());
 	}
+	
 	
 	
 }

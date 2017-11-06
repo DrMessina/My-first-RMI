@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import javax.swing.JLabel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
@@ -62,6 +64,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	private DefaultListModel<String> roomUsers;
 	private JCheckBox chckbxPrivate;
 	private Integer actualWidth;
+	private int 	actualTab;
 	
 	private ClientInterface clientInterface;
 	
@@ -191,6 +194,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		gbc_user_rooms_tabbed.gridy = 0;
 		frame.getContentPane().add(user_rooms_tabbed, gbc_user_rooms_tabbed);
 		
+		
 		JPanel rooms_panel = new JPanel();
 		rooms_panel.setMaximumSize(new Dimension(70, 32767));
 		rooms_panel.setMinimumSize(new Dimension(70, 0));
@@ -311,7 +315,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
-		manageDisconnection();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            		manageDisconnection();
+            }});
 		
 		allowTextSubmit(false);
 		
@@ -509,7 +516,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 						*/
 							String roomName = null;
 							if (isPrivate) {
-								roomName = "[Private] " + inputText;
+								roomName = "* " + inputText;
 							} else {
 								roomName = inputText;
 							}
@@ -517,9 +524,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			    				listRooms.setModel(userRooms);
 			    				
 			    				
-			    				lastIndex = userRooms.getSize() - 1;
-			    				javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			    	    			public void run() {
+			    				lastIndex = userRooms.getSize();
 			    	    				System.out.println(userName);
 			    	    				System.out.println(lastIndex);
 			    	    				
@@ -530,8 +535,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			    	    				chatChange(lastIndex);
 			    	    				listRooms.setSelectedIndex(lastIndex);
 			    	    				inputframe.dispatchEvent(new WindowEvent(inputframe, WindowEvent.WINDOW_CLOSING));
-			    	    			}
-			    	    		});
+			    	    			
 			    		}
 				}	
 			} else if (((JButton) evt.getSource()).getActionCommand().equals("send")) {
@@ -566,6 +570,10 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
 	            		clientInterface.getIntoRoom(roomID, oldRoomID, user, 0);
+	            }
+			});
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
 	            		chatChange(roomID);
 	            }
 			});
@@ -583,9 +591,8 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 			System.out.println("roomMessages not cleared");
 		}
 		
-		// Appel serveur pour avoir la bonne conversation avec l'id de la room
-		
 		actualRoom = clientInterface.getRooms().get(roomID);
+		
 		if (actualRoom.getIsPrivate()) {
 			//utilisateur dans les users de la room privée
 			if (actualRoom.getUsers().containsKey(user.getNom())) {
@@ -652,8 +659,9 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	public void showAllRooms () {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+           public void run() {
             		System.out.println("try to get rooms");
+            		
             		rooms = clientInterface.getRooms();
             		System.out.println("Rooms in GUI");
             		if (!rooms.isEmpty()) {
@@ -661,7 +669,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
             				String roomName = null;
             				boolean privateRoom = rooms.get(position).getIsPrivate();
             				if (privateRoom) {
-            					roomName = "[Private] " + rooms.get(position).getName();
+            					roomName = "*" + rooms.get(position).getName();
             				} else {
             					roomName = rooms.get(position).getName();
             				}
@@ -670,7 +678,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
             			listRooms.setModel(userRooms);
             			System.out.println("Model set");
             		}
-            }
+           }
 		});   
 	}
 	
@@ -689,8 +697,14 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 	
 	//mise à jour de tous les champs géré par un Timer dans le client
 	public void update() {
+		int actualTab2 = stateChanged();
 		userRooms.clear();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
 		showAllRooms();
+            }
+		});
+		
 		try {
 			int roomId = actualRoom.gtIDsalon();
 			System.out.println("Actual room id is " + roomId);
@@ -704,7 +718,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		} catch (Exception e){
 			System.out.println("Didn't update messages and users in rooms");
 		}
-		
+		user_rooms_tabbed.setSelectedIndex(actualTab2);
 		System.out.println("I update");
 	}
 	
@@ -722,14 +736,29 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		frame.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent evt){
 				//javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		          //  public void run() {
+		            //public void run() {
+		            	System.out.println("déconnection" + Thread.activeCount());
 		            		clientInterface.disconnect(user);
-		            		System.out.println("déconnection");
+		        
+		            //}});
 		            		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		            		System.exit(0);
-		           //}});
+				//javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		            //public void run() {
+				System.exit(0);
+		            //}
+				//});
 			}
 		});
+	}
+	
+	public int stateChanged() {
+		user_rooms_tabbed.addChangeListener(new ChangeListener() {
+		    public void stateChanged(ChangeEvent evt) {
+		    actualTab = user_rooms_tabbed.getSelectedIndex();
+		    	System.out.println("Tab: " + user_rooms_tabbed.getSelectedIndex());
+		    }
+		});
+		return actualTab;
 	}
 	
 	/*public void addElement (String elementType, String element, Hashtable<Integer, String> map) {

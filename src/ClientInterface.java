@@ -14,4 +14,4 @@ public interface ClientInterface {
 	public boolean addGlobalUser(String user);
 	public boolean inviteUser(User userAllow,int roomId);
 	public void disconnect(User u);
-}
+	}
