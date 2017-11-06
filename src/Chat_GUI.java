@@ -587,6 +587,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 		
 		actualRoom = clientInterface.getRooms().get(roomID);
 		if (actualRoom.getIsPrivate()) {
+			//utilisateur dans les users de la room privée
 			if (actualRoom.getUsers().containsKey(user.getNom())) {
 				user_rooms_tabbed.addTab("Users", null, users_panel, null);
 				Hashtable<Integer, Msg> messages = actualRoom.getMessages();
@@ -600,6 +601,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 					allowTextSubmit(true);
 					System.out.println("Model set");
 				}
+				//utilisateur pas dans la room privée
 			} else {
 				if (user_rooms_tabbed.getTabCount() > 1) {
 					user_rooms_tabbed.remove(1);
@@ -611,6 +613,7 @@ public class Chat_GUI implements GUIInterface, ActionListener, ComponentListener
 				allowTextSubmit(false);
 				
 			}
+			// conversation publique
 		} else {
 			user_rooms_tabbed.addTab("Users", null, users_panel, null);
 			btnAddUser.setVisible(false);
